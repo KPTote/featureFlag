@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+//HACER MIGRACIÓN CADA VEZ QUE SE HAGA CAMBIOS AQUÍ npx prisma migrate dev --name init 
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+enum ENUM_TYPE_USER{
+  ADMINISTRATOR
+  MANAGED
+}
+
+model FT_USER{
+  USER_ID Int @id @default(autoincrement())
+  USER_FIRSTNAME String @db.VarChar
+  USER_LASTNAME String @db.VarChar
+  USER_PASSWORD  String @db.VarChar
+  USER_EMAIL String @unique @db.VarChar
+  USER_TYPE_USER ENUM_TYPE_USER
+}
+
+
+enum ENUM_PROFILE{
+  BANPAIS
+  BIPA
+  BIESV
+}
+
+enum ENUM_STATUS_FEATURE{
+  ON
+  OFF
+}
+
+model FT_FEATURE{
+  FTRE_ID Int @id @default(autoincrement())
+  FTRE_NAME String @unique @db.VarChar
+  FTRE_LINE String @db.VarChar
+  FTRE_PROFILE ENUM_PROFILE
+  FTRE_STATUS ENUM_STATUS_FEATURE
+}

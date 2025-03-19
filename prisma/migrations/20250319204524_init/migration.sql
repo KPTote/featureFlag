@@ -1,0 +1,2 @@
+-- DropIndex
+DROP INDEX "FT_FEATURE_FTRE_LINE_key";
