@@ -16,8 +16,9 @@ datasource db {
 }
 
 enum ENUM_TYPE_USER{
-  ADMINISTRATOR
-  MANAGED
+  USER_MAIN
+  ADMIN
+  TESTER
 }
 
 model FT_USER{
@@ -48,3 +49,11 @@ model FT_FEATURE{
   FTRE_PROFILE ENUM_PROFILE
   FTRE_STATUS ENUM_STATUS_FEATURE
 }
+
+
+model FT_EVENT_LOG{
+  ELOG_ID Int @id @default(autoincrement())
+  ELOG_DATE_TIME DateTime @default(now())
+  ELOG_DETAILS String @db.VarChar
+}
+

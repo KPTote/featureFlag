@@ -1,0 +1,27 @@
+-- CreateTable
+CREATE TABLE "FT_EVENT_LOG" (
+    "ELOG_ID" SERIAL NOT NULL,
+    "ELOG_DATE_TIME" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ELOG_DETAILS" VARCHAR NOT NULL,
+
+    CONSTRAINT "FT_EVENT_LOG_pkey" PRIMARY KEY ("ELOG_ID")
+);
+
+
+-- Crear la función del trigger
+CREATE OR REPLACE FUNCTION log_user_creation()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Inserta un registro en la tabla AuditLog
+  INSERT INTO "FT_EVENT_LOG" ("ELOG_DATE_TIME", "ELOG_DETAILS")
+  VALUES (NOW(), 'USER CREATION');
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Crear el trigger
+CREATE TRIGGER after_user_insert
+AFTER INSERT ON "FT_USER"
+FOR EACH ROW
+EXECUTE FUNCTION log_user_creation();

@@ -20,8 +20,8 @@ export class FeatureController {
     public getAllFeatures = (req: Request, res: Response) => {
 
         this.getFeatureService.getAllFeatures()
-        .then( features => res.json(features))
-        .catch( error => this.handlerError(error, res));
+            .then(features => res.json(features))
+            .catch(error => this.handlerError(error, res));
 
     };
 
@@ -30,9 +30,9 @@ export class FeatureController {
         const id = Number(req.params.id);
 
         this.getFeatureService.getFeature(id)
-        .then( feature => res.json(feature))
-        .catch(error => this.handlerError(error, res));
-        
+            .then(feature => res.json(feature))
+            .catch(error => this.handlerError(error, res));
+
     };
 
     public createFeature = (req: Request, res: Response) => {
@@ -54,7 +54,10 @@ export class FeatureController {
 
     public updateFeature = (req: Request, res: Response) => {
 
+
         const id = Number(req.params.id);
+        const { emailUser = '' } = req.headers;
+
         const [error, updateFeatureDto] = UpdateFeatureDto.update(req.body);
 
         if (error) {
@@ -63,7 +66,7 @@ export class FeatureController {
         };
 
 
-        this.updateFeatureService.updateFeature(updateFeatureDto!, id)
+        this.updateFeatureService.updateFeature(updateFeatureDto!, id, emailUser as string)
             .then(feature => res.json(feature))
             .catch(error => this.handlerError(error, res));
 
@@ -75,8 +78,8 @@ export class FeatureController {
         const id = Number(req.params.id);
 
         this.deleteFeatureService.deleteFeature(id)
-        .then(feature => res.json(feature))
-        .catch( error => this.handlerError(error, res));
+            .then(feature => res.json(feature))
+            .catch(error => this.handlerError(error, res));
     };
 
     private handlerError = (error: unknown, res: Response) => {

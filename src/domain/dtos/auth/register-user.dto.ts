@@ -1,4 +1,5 @@
 import { regularExps } from "../../../configs/regular-exp";
+import { ENUM_TYPE_USER } from "../../../enums";
 import { User } from "../../../interfaces/user.interface";
 
 
@@ -43,7 +44,7 @@ export class RegisterUserDto {
             return ['Missing type user'];
         };
 
-        if (typeUser && !['ADMINISTRATOR', 'MANAGED'].some(type => type === typeUser)) {
+        if (typeUser && ![ENUM_TYPE_USER.ADMIN, ENUM_TYPE_USER.USER_MAIN, ENUM_TYPE_USER.TESTER].some(type => type === typeUser)) {
             return ['Type user incorrect'];
         };
 

@@ -1,4 +1,5 @@
 export enum ENUM_TYPE_USER {
-    ADMINISTRATOR = 'ADMINISTRATOR',
-    MANAGED = 'MANAGED',
+    USER_MAIN = 'USER_MAIN',
+    ADMIN = 'ADMIN',
+    TESTER = 'TESTER'
 };

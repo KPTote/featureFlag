@@ -14,6 +14,8 @@ export class AuthController{
 
     public login = (req: Request, res: Response) => {
 
+        console.log(req);
+
         const {email , password } = req.body;
 
         const [error, loginDto] = LoginUserDto.login(email, password);

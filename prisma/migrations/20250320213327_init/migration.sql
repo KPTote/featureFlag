@@ -1,0 +1,14 @@
+/*
+  Warnings:
+
+  - The values [ADMINISTRATOR,MANAGED] on the enum `ENUM_TYPE_USER` will be removed. If these variants are still used in the database, this will fail.
+
+*/
+-- AlterEnum
+BEGIN;
+CREATE TYPE "ENUM_TYPE_USER_new" AS ENUM ('USER_MAIN', 'ADMIN', 'TESTER');
+ALTER TABLE "FT_USER" ALTER COLUMN "USER_TYPE_USER" TYPE "ENUM_TYPE_USER_new" USING ("USER_TYPE_USER"::text::"ENUM_TYPE_USER_new");
+ALTER TYPE "ENUM_TYPE_USER" RENAME TO "ENUM_TYPE_USER_old";
+ALTER TYPE "ENUM_TYPE_USER_new" RENAME TO "ENUM_TYPE_USER";
+DROP TYPE "ENUM_TYPE_USER_old";
+COMMIT;

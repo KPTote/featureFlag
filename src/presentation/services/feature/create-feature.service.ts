@@ -1,9 +1,16 @@
-import { FeatureRepository } from '../../../data/repositories/feature.repository';
+import { AuthRepository, FeatureRepository } from '../../../data/repositories';
 import { CreateFeatureDto } from '../../../domain/dtos/feature/create-feature.dto';
 import { CustomError } from '../../../domain/errors/custom.error';
+import { ENUM_TYPE_USER } from '../../../enums';
+import { TypeUserVerificationService } from '../utils/type-user-verification.service';
 
 
 export class CreateFeatureService {
+
+
+    constructor(
+        private typeUserVerificationService: TypeUserVerificationService
+    ){};
 
 
 
@@ -27,7 +34,27 @@ export class CreateFeatureService {
 
     };
 
+    
 
+    public async verifyTypeUser(email: string){
+
+
+        try {
+            const user = await AuthRepository.findEmail(email);
+
+            if(!user){
+                throw CustomError.internalServer(`User don't exist`);
+            };
+
+            return user.USER_TYPE_USER !== ENUM_TYPE_USER.TESTER;
+
+
+        } catch (error) {
+            
+        }
+
+        // return this.typeUserVerificationService.verify(user);
+    };
 
 
 };

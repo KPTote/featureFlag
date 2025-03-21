@@ -6,6 +6,10 @@ export class AuthRepository {
 
 
     static async create(userProps: User){
+
+        console.log(userProps);
+
+
        return await prisma.fT_USER.create({ data: {
         USER_FIRSTNAME: userProps.firstName ?? '',
         USER_LASTNAME: userProps.lastName ?? '',

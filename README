@@ -1,0 +1,9 @@
+
+
+ 1. To create database, you need to execute:
+
+    - docker compose up -d 
+
+ 2. Generate schema from Prisma ORM, this is for generate all the tables: 
+
+    - npm run prisma_generate_schema
