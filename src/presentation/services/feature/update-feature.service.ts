@@ -20,7 +20,7 @@ export class UpdateFeatureService {
         const user = await AuthRepository.findEmail(emailUser);
 
         if (!user) {
-            throw CustomError.badRequest('User does not exist');
+            throw CustomError.badRequest('User does not exist S');
         };
 
         if (user.USER_TYPE_USER === ENUM_TYPE_USER.TESTER) {

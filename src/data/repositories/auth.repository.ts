@@ -16,6 +16,7 @@ export class AuthRepository {
         USER_PASSWORD: userProps.password ?? '',
         USER_EMAIL: userProps.email ?? '',
         USER_TYPE_USER: userProps.typeUser ?? '',
+        USER_ADMIN_ID: userProps.adminId
        } });
 
     };
@@ -24,6 +25,14 @@ export class AuthRepository {
         return await prisma.fT_USER.findFirst({
             where: {
                 USER_EMAIL: email
+            }
+        });
+    };
+
+    static async findById(id: number){
+        return await prisma.fT_USER.findUnique({
+            where: {
+                USER_ID: id
             }
         });
     };

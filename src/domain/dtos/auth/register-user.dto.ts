@@ -14,7 +14,7 @@ export class RegisterUserDto {
 
     static create(props: User): [string?, RegisterUserDto?] {
 
-        const { firstName, lastName, email, password, typeUser } = props
+        const { firstName, lastName, email, password, typeUser, adminId } = props
 
         if (!firstName) {
             return ['Missing Name'];
@@ -44,9 +44,21 @@ export class RegisterUserDto {
             return ['Missing type user'];
         };
 
-        if (typeUser && ![ENUM_TYPE_USER.ADMIN, ENUM_TYPE_USER.USER_MAIN, ENUM_TYPE_USER.TESTER].some(type => type === typeUser)) {
+
+        if (typeUser && ![ENUM_TYPE_USER.ADMIN, ENUM_TYPE_USER.USER_MAIN, ENUM_TYPE_USER.TESTER].some(type => type === typeUser.toUpperCase())) {
             return ['Type user incorrect'];
         };
+
+        if(typeUser.toUpperCase() === ENUM_TYPE_USER.TESTER && !adminId){
+            return ['Administrator missing'];
+        };
+
+        if( adminId && typeof adminId !== 'number' ){
+            props.adminId = Number(adminId);
+        };
+
+       
+        props.typeUser = typeUser.toUpperCase() as ENUM_TYPE_USER;
 
         return [undefined, new RegisterUserDto(props)];
 

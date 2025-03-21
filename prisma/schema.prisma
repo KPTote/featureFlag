@@ -28,6 +28,9 @@ model FT_USER{
   USER_PASSWORD  String @db.VarChar
   USER_EMAIL String @unique @db.VarChar
   USER_TYPE_USER ENUM_TYPE_USER
+  USER_ADMIN_ID Int?
+  USER_ADMIN FT_USER? @relation("AdminToUser", fields: [USER_ADMIN_ID], references: [USER_ID])
+  USER_USERS_RELATION FT_USER[] @relation("AdminToUser")
 }
 
 

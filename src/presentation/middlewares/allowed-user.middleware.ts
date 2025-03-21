@@ -1,56 +1,47 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthRepository } from "../../data/repositories";
 import { CustomError } from "../../domain/errors/custom.error";
-import { ENUM_TYPE_USER } from "../../enums";
-import { Paths } from "../enums/paths.enum";
+import { UserRestrictionsService } from "../services";
 
 export const isAllowedUser = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email = '' } = req.headers;
 
-    console.log(req.method);
 
     try {
 
         const user = await AuthRepository.findEmail(email as string);
 
         if (!user) {
-            res.status(401).json({ error: `User don't exist` });
+            res.status(401).json({ error: `User don't exist M` });
             return;
         };
 
-        if (user.USER_TYPE_USER === ENUM_TYPE_USER.TESTER) {
+        const restrictions = new UserRestrictionsService();
 
-            if ( !restrictedPaths(req.originalUrl, req.method) ){
-                res.status(401).json({ error: 'Action not allowed' });
-                return;
-            }
-         
-        };
+        const isAllowed = restrictions.checkRestrictions({
+            typeUser: user.USER_TYPE_USER,
+            idUser: user.USER_ID,
+            url: req.url,
+            method: req.method
+        });
+        console.log(isAllowed);
+
+        if (!isAllowed) {
+            res.status(401).json({ error: 'Action not allowed' });
+            return;
+        }
 
         next();
 
 
 
-
     } catch (error) {
         throw CustomError.internalServer(`${error}`);
-    }
+    };
 
 
 };
 
-const restrictedPaths = (path: string, method: string) => {
 
-    if (path === Paths.REGISTER) return false;
-    if (path.includes(Paths.FEATURE_BASE_URL) && blockedMethods.includes(method)) return false;
-
-    return true;
-
-
-};
-
-const blockedMethods: string[] = [
-    'POST', 'DELETE'
-];
 

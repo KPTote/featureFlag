@@ -40,7 +40,7 @@ export class CreateFeatureDto {
             return ['Missing status feature'];
         };
 
-        if(statusFeature && ![StatusFeature.ON, StatusFeature.OFF].some(state => state === statusFeature)){
+        if(statusFeature && ![StatusFeature.ON, StatusFeature.OFF].some(state => state === String(statusFeature).toUpperCase())){
             return ['Status incorrect'];
         };
 

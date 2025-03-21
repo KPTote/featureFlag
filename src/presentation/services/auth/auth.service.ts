@@ -17,6 +17,16 @@ export class AuthService {
             throw CustomError.badRequest('Email aready exist');
         };
 
+        if (registerUserDto.userProps.adminId) {
+            const verifyAdmin = await AuthRepository.findById(registerUserDto.userProps.adminId);
+
+            if (!verifyAdmin) {
+                throw CustomError.badRequest('Invalid administrator');
+            };
+
+        }
+
+
         try {
 
             const { userProps } = new UserEntity(registerUserDto.userProps);

@@ -1,0 +1,55 @@
+import { ENUM_TYPE_USER } from "../../../enums";
+import { Restrictions } from "../../../interfaces/restrictions.interface";
+import { Paths } from "../../enums/paths.enum";
+
+
+
+export class UserRestrictionsService {
+
+
+    public checkRestrictions(props: Restrictions): boolean {
+
+        if (props.typeUser === ENUM_TYPE_USER.ADMIN) {
+            return this.adminUser(props);
+        };
+
+        if (props.typeUser === ENUM_TYPE_USER.TESTER) {
+            return this.testerUser(props);
+        };
+
+
+        return true;
+
+    };
+
+
+    private adminUser(props: Restrictions): boolean {
+
+        if(props.url.includes(Paths.USERS_BASE_URL)){
+
+            if (Paths.USERS_BASE_URL.length === props.url.length){
+                return false;
+            };
+
+                const arr = props.url.split('/');
+                const idParam = arr[arr.length - 1];
+    
+                if (props.idUser !== Number(idParam)) return false;
+
+        };
+
+
+        return true;
+    };
+
+    private testerUser(props: Restrictions): boolean {
+
+        const blockedMethods: string[] = ['POST', 'DELETE'];
+
+        if (props.url === Paths.REGISTER) return false;
+        if (props.url.includes(Paths.FEATURE_BASE_URL) && blockedMethods.includes(props.method)) return false;
+
+        return true;
+    };
+
+};

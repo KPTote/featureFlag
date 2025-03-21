@@ -42,6 +42,14 @@ export class FeatureRepository {
         })
     };
 
+    static async findByName(name: string){
+        return await prisma.fT_FEATURE.findUnique({
+            where: {
+                FTRE_NAME: name
+            }
+        })
+    };
+
     static async getAll(){
         return await prisma.fT_FEATURE.findMany();
     };

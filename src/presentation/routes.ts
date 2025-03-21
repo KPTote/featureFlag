@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthRoutes } from "./auth/routes";
+import { DashboardUserRoutes } from "./dashboard-user/routes";
 import { FeatureRoutes } from "./feature/routes";
 
 export class AppRoutes{
@@ -9,8 +10,9 @@ export class AppRoutes{
 
         const router = Router();
 
-        router.use('/api/auth', AuthRoutes.routes)
-        router.use('/api/feature/', FeatureRoutes.routes)
+        router.use('/api/auth', AuthRoutes.routes);
+        router.use('/api/feature/', FeatureRoutes.routes);
+        router.use('/api/dashboard-user/', DashboardUserRoutes.routes);
 
         return router;
 

@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
-import { isAllowedUser } from './middlewares/allowed-user.middleware';
+import { isAllowedUser } from './middlewares';
+
 
 export class Server {
 

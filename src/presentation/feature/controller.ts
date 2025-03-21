@@ -56,7 +56,7 @@ export class FeatureController {
 
 
         const id = Number(req.params.id);
-        const { emailUser = '' } = req.headers;
+        const { email = '' } = req.headers;
 
         const [error, updateFeatureDto] = UpdateFeatureDto.update(req.body);
 
@@ -66,7 +66,7 @@ export class FeatureController {
         };
 
 
-        this.updateFeatureService.updateFeature(updateFeatureDto!, id, emailUser as string)
+        this.updateFeatureService.updateFeature(updateFeatureDto!, id, email as string)
             .then(feature => res.json(feature))
             .catch(error => this.handlerError(error, res));
 
