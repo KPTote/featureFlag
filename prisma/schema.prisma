@@ -28,9 +28,12 @@ model FT_USER{
   USER_PASSWORD  String @db.VarChar
   USER_EMAIL String @unique @db.VarChar
   USER_TYPE_USER ENUM_TYPE_USER
+  USER_PROFILE ENUM_PROFILE?
   USER_ADMIN_ID Int?
   USER_ADMIN FT_USER? @relation("AdminToUser", fields: [USER_ADMIN_ID], references: [USER_ID])
   USER_USERS_RELATION FT_USER[] @relation("AdminToUser")
+  logsUser FT_LOG_USER[]    @relation("UserToLogs") // Campo virtual
+  logsUserFeature FT_LOG_FEATURE[]    @relation("UserFeatureLog") // Campo virtual
 }
 
 
@@ -51,12 +54,28 @@ model FT_FEATURE{
   FTRE_LINE String @db.VarChar
   FTRE_PROFILE ENUM_PROFILE
   FTRE_STATUS ENUM_STATUS_FEATURE
+  logs FT_LOG_FEATURE[]    @relation("FeatureToLogs") // Campo virtual
 }
 
 
-model FT_EVENT_LOG{
-  ELOG_ID Int @id @default(autoincrement())
-  ELOG_DATE_TIME DateTime @default(now())
-  ELOG_DETAILS String @db.VarChar
+model FT_LOG_FEATURE{
+  LOGF_ID Int @id @default(autoincrement())
+  LOGF_DATE_TIME DateTime @default(now())
+  LOGF_DETAILS String @db.VarChar
+
+  // Clave foránea y relación
+  FTRE_ID        Int         // Campo físico en la DB
+  feature        FT_FEATURE  @relation("FeatureToLogs", fields: [FTRE_ID], references: [FTRE_ID])
+  USER_ID Int
+  user FT_USER  @relation("UserFeatureLog", fields: [USER_ID], references: [USER_ID])
 }
 
+model FT_LOG_USER{
+  LOGU_ID Int @id @default(autoincrement())
+  LOGU_DATE_TIME DateTime @default(now())
+  LOGU_DETAILS String @db.VarChar
+
+    // Clave foránea y relación
+  USER_ID        Int         // Campo físico en la DB
+  user       FT_USER  @relation("UserToLogs", fields: [USER_ID], references: [USER_ID])
+}

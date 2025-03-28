@@ -1,24 +1,31 @@
 import { EncryptPassUser } from "../../../configs";
 import { AuthRepository } from "../../../data/repositories";
-import { LoginUserDto, RegisterUserDto } from "../../../domain/dtos";
-import { UserEntity } from "../../../domain/entities/user.entity";
+import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
+import { UserLogAction } from "../../../enums/user-log-action.enum";
+import { User } from "../../../interfaces/user.interface";
+import { InsertIntoLogService } from "../user-log/insert-into-log.service";
 
 
 
 export class AuthService {
 
-    public async registerUser(registerUserDto: RegisterUserDto) {
+    constructor(
+        private readonly insertIntoLogService: InsertIntoLogService
+    ) { }
+
+    public async registerUser(registerUserDto: User, emailAdmin: string) {
 
 
-        const emailExist = await AuthRepository.findEmail(registerUserDto.userProps.email);
+        const emailExist = await AuthRepository.findByEmail(registerUserDto.email);
+
 
         if (emailExist) {
             throw CustomError.badRequest('Email aready exist');
         };
 
-        if (registerUserDto.userProps.adminId) {
-            const verifyAdmin = await AuthRepository.findById(registerUserDto.userProps.adminId);
+        if (registerUserDto.adminId) {
+            const verifyAdmin = await AuthRepository.findById(registerUserDto.adminId);
 
             if (!verifyAdmin) {
                 throw CustomError.badRequest('Invalid administrator');
@@ -29,16 +36,23 @@ export class AuthService {
 
         try {
 
-            const { userProps } = new UserEntity(registerUserDto.userProps);
 
-            userProps.password = EncryptPassUser.hash(userProps.password);
+            registerUserDto.password = EncryptPassUser.hash(registerUserDto.password);
 
-            const { USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL } = await AuthRepository.create(userProps);
+            const { USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL } = await AuthRepository.create(registerUserDto);
+
+            this.insertIntoLogService.intoUserLog({
+                firstName: USER_FIRSTNAME,
+                lastName: USER_LASTNAME,
+                action: UserLogAction.CREATE,
+                email: emailAdmin
+            });
+
 
             return {
-                USER_FIRSTNAME,
-                USER_LASTNAME,
-                USER_EMAIL
+                userFirstName: USER_FIRSTNAME,
+                userLastName: USER_LASTNAME,
+                userEmail: USER_EMAIL
             };
 
 
@@ -54,7 +68,7 @@ export class AuthService {
 
         const { email, password } = loginUserDto;
 
-        const emailExist = await AuthRepository.findEmail(email);
+        const emailExist = await AuthRepository.findByEmail(email);
 
         if (!emailExist) {
             throw CustomError.badRequest("Email doesn't exist");

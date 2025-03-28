@@ -19,7 +19,10 @@ export class FeatureController {
 
     public getAllFeatures = (req: Request, res: Response) => {
 
-        this.getFeatureService.getAllFeatures()
+        const { email = '' } = req.headers;
+
+
+        this.getFeatureService.getAllFeatures(email as string)
             .then(features => res.json(features))
             .catch(error => this.handlerError(error, res));
 

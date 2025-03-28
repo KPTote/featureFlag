@@ -8,7 +8,8 @@
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/app.js",
     "prisma_generate_schema": "npx prisma migrate dev --name init",
-    "prisma_reset": "npx prisma migrate reset"
+    "prisma_reset": "npx prisma migrate reset",
+    "docker_compose_db" : "docker compose up -d"
   },
   "keywords": [],
   "author": "",

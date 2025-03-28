@@ -4,7 +4,7 @@ import { User } from "../../../interfaces/user.interface";
 
 
 
-export class RegisterUserDto {
+export class UserDto {
 
 
     constructor(
@@ -12,7 +12,7 @@ export class RegisterUserDto {
     ) { };
 
 
-    static create(props: User): [string?, RegisterUserDto?] {
+    static create(props: User): [string?, User?] {
 
         const { firstName, lastName, email, password, typeUser, adminId } = props
 
@@ -44,7 +44,6 @@ export class RegisterUserDto {
             return ['Missing type user'];
         };
 
-
         if (typeUser && ![ENUM_TYPE_USER.ADMIN, ENUM_TYPE_USER.USER_MAIN, ENUM_TYPE_USER.TESTER].some(type => type === typeUser.toUpperCase())) {
             return ['Type user incorrect'];
         };
@@ -59,8 +58,9 @@ export class RegisterUserDto {
 
        
         props.typeUser = typeUser.toUpperCase() as ENUM_TYPE_USER;
+        const user = new UserDto(props);
 
-        return [undefined, new RegisterUserDto(props)];
+        return [undefined, user.userProps];
 
     };
 

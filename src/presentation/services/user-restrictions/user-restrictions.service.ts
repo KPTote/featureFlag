@@ -25,9 +25,9 @@ export class UserRestrictionsService {
 
     private adminUser(props: Restrictions): boolean {
 
-        if(props.url.includes(Paths.USERS_BASE_URL)){
+        if(props.url.includes(Paths.USERS_DASHBOARD_BASE_URL)){
 
-            if (Paths.USERS_BASE_URL.length === props.url.length){
+            if (Paths.USERS_DASHBOARD_BASE_URL.length === props.url.length){
                 return false;
             };
 
@@ -47,7 +47,7 @@ export class UserRestrictionsService {
         const blockedMethods: string[] = ['POST', 'DELETE'];
 
         if (props.url === Paths.REGISTER) return false;
-        if (props.url.includes(Paths.FEATURE_BASE_URL) && blockedMethods.includes(props.method)) return false;
+        if (props.url.includes(Paths.FEATURE_BASE_URL || Paths.USER_BASE_URL ) && blockedMethods.includes(props.method)) return false;
 
         return true;
     };

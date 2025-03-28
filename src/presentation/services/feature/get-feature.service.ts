@@ -1,14 +1,21 @@
-import { FeatureRepository } from "../../../data/repositories";
+import { AuthRepository, FeatureRepository } from "../../../data/repositories";
 import { CustomError } from "../../../domain/errors/custom.error";
 
 
 export class GetFeatureService {
 
-    public async getAllFeatures() {
+    public async getAllFeatures(emailUser: string) {
+
+        const user = await AuthRepository.findByEmail(emailUser);
+
+
+        if (!user) {
+            throw CustomError.badRequest('User does not exist S');
+        };
 
         try {
 
-            return await FeatureRepository.getAll();
+            return await FeatureRepository.getAll(user.USER_PROFILE ?? '' , user.USER_TYPE_USER);
 
         } catch (error) {
             throw CustomError.internalServer(`${error}`);
@@ -28,10 +35,10 @@ export class GetFeatureService {
         try {
 
             return await FeatureRepository.findById(id)
-            
+
         } catch (error) {
             throw CustomError.internalServer(`${error}`);
-            
+
         }
 
     };

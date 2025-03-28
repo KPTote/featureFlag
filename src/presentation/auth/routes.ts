@@ -1,15 +1,21 @@
 import { Router } from "express";
+import { UserLogService } from "../services";
 import { AuthService } from "../services/auth/auth.service";
+import { InsertIntoLogService } from "../services/user-log/insert-into-log.service";
 import { AuthController } from "./controller";
 
 
-export class AuthRoutes{
+export class AuthRoutes {
 
 
-    static get routes(): Router{
+    static get routes(): Router {
 
         const router = Router();
-        const authService = new AuthService();
+
+        const userLogService = new UserLogService();
+        const insertIntoLogService = new InsertIntoLogService(userLogService);
+    
+        const authService = new AuthService(insertIntoLogService);
         const controller = new AuthController(authService);
 
 

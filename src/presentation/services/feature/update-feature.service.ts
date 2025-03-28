@@ -17,7 +17,7 @@ export class UpdateFeatureService {
             throw CustomError.badRequest('Feature does not exist');
         };
 
-        const user = await AuthRepository.findEmail(emailUser);
+        const user = await AuthRepository.findByEmail(emailUser);
 
         if (!user) {
             throw CustomError.badRequest('User does not exist S');

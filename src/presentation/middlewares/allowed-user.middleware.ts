@@ -7,10 +7,9 @@ export const isAllowedUser = async (req: Request, res: Response, next: NextFunct
 
     const { email = '' } = req.headers;
 
-
     try {
 
-        const user = await AuthRepository.findEmail(email as string);
+        const user = await AuthRepository.findByEmail(email as string);
 
         if (!user) {
             res.status(401).json({ error: `User don't exist M` });
@@ -25,7 +24,6 @@ export const isAllowedUser = async (req: Request, res: Response, next: NextFunct
             url: req.url,
             method: req.method
         });
-        console.log(isAllowed);
 
         if (!isAllowed) {
             res.status(401).json({ error: 'Action not allowed' });
