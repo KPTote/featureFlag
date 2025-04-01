@@ -1,3 +1,4 @@
+import { StatusFeature } from "../../../enums";
 
 interface ActionUserMessageProps {
     action: number;
@@ -21,4 +22,22 @@ export const actionUserMessage = (props: ActionUserMessageProps): string => {
         default:
             return 'ACTION NOT IDENTIFY';
     }
+};
+
+export const actionFeatureMessage = (name: string, status: StatusFeature, action: number): string => {
+
+    switch (action) {
+        case 1:
+            return `FEATURE "${name}" CREATED WITH STATUS "${status}"`;
+        case 2:
+            return `FEATURE "${name}" UPDATED`;
+        case 3:
+            return `FEATURE STATUS CHANGE TO "${status}"`;
+        case 4:
+            return `FEATURE "${name}" DELETED`;
+        default:
+            return `ACTION NOT IDENTIFY`;
+    }
+
+
 };

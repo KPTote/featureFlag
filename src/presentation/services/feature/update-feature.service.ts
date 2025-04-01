@@ -1,8 +1,11 @@
 import { AuthRepository, FeatureRepository } from '../../../data/repositories';
 import { UpdateFeatureDto } from '../../../domain/dtos';
 import { CustomError } from '../../../domain/errors/custom.error';
-import { ENUM_TYPE_USER, StatusFeature } from '../../../enums';
+import { ENUM_TYPE_USER, Profile, StatusFeature } from '../../../enums';
+import { FeatureLogAction } from '../../../enums/feature-log-action.enum';
 import { Feature } from '../../../interfaces/feature.interface';
+import { FeatureLogService } from '../feature-log/feature-log.service';
+import { actionFeatureMessage } from '../utils/log-actions';
 
 
 export class UpdateFeatureService {
@@ -23,14 +26,37 @@ export class UpdateFeatureService {
             throw CustomError.badRequest('User does not exist S');
         };
 
-        if (user.USER_TYPE_USER === ENUM_TYPE_USER.TESTER) {
-            const updateStatus = this.featureForTesterUser(checkFeature, updateFeatureDto.feature.statusFeature);
-            return await FeatureRepository.update(idFeature, updateStatus);
-        };
+
 
         try {
 
-            return await FeatureRepository.update(idFeature, updateFeatureDto.feature);
+            if (user.USER_TYPE_USER === ENUM_TYPE_USER.TESTER) {
+                const updateStatus = this.featureForTesterUser(checkFeature, updateFeatureDto.feature.statusFeature);
+                const feature = await FeatureRepository.update(idFeature, updateStatus);
+
+                FeatureLogService.createEvent({
+                    details: actionFeatureMessage(feature.FTRE_NAME, feature.FTRE_STATUS as StatusFeature, FeatureLogAction.UPDATE_STATUS),
+                    executedBy: emailUser,
+                    featureId: feature.FTRE_ID,
+                    featureName: feature.FTRE_NAME,
+                    featureProfil: feature.FTRE_PROFILE as Profile
+                });
+
+                return feature;
+
+            };
+
+            const feature = await FeatureRepository.update(idFeature, updateFeatureDto.feature);
+
+            FeatureLogService.createEvent({
+                details: actionFeatureMessage(feature.FTRE_NAME, feature.FTRE_STATUS as StatusFeature, FeatureLogAction.UPDATE),
+                executedBy: emailUser,
+                featureId: feature.FTRE_ID,
+                featureName: feature.FTRE_NAME,
+                featureProfil: feature.FTRE_PROFILE as Profile
+            });
+
+            return feature
 
         } catch (error) {
             throw CustomError.internalServer(`${error}`);

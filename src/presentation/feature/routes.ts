@@ -23,7 +23,7 @@ export class FeatureRoutes {
 
         router.post('/', featureController.createFeature);
         router.put('/:id', featureController.updateFeature);
-        router.delete('/:id', featureController.deleteFeature);
+        router.post('/delete-feature/', featureController.deleteFeature);
         router.get('/', featureController.getAllFeatures);
         router.get('/:id', featureController.getFeature);
 

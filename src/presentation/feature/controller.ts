@@ -40,6 +40,8 @@ export class FeatureController {
 
     public createFeature = (req: Request, res: Response) => {
 
+        const { email = '' } = req.headers;
+
         const [error, createFeatureDto] = CreateFeatureDto.create(req.body);
 
         if (error) {
@@ -47,7 +49,7 @@ export class FeatureController {
             return;
         };
 
-        this.createFeatureService.createFeature(createFeatureDto!)
+        this.createFeatureService.createFeature(createFeatureDto!, email as string)
             .then(feature => res.json(feature))
             .catch(error => this.handlerError(error, res));
 
@@ -78,9 +80,10 @@ export class FeatureController {
 
     public deleteFeature = (req: Request, res: Response) => {
 
-        const id = Number(req.params.id);
+        const { email = '' } = req.headers;
+        const id = Number(req.body.id);
 
-        this.deleteFeatureService.deleteFeature(id)
+        this.deleteFeatureService.deleteFeature(id, email as string)
             .then(feature => res.json(feature))
             .catch(error => this.handlerError(error, res));
     };
