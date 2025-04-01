@@ -10,7 +10,7 @@ export class UserLogRepository {
         return await prisma.fT_LOG_USER.create({
             data: {
                 LOGU_DETAILS: props.actionMessage ?? '',
-                USER_ID: props.id
+                LOGU_EXECUTED_BY: props.emailExecutedBy
             }
         });
 
@@ -18,17 +18,7 @@ export class UserLogRepository {
 
     static async get() {
 
-        return await prisma.fT_LOG_USER.findMany({
-            include: {
-                user: {
-                    select: {
-                        USER_FIRSTNAME: true,
-                        USER_LASTNAME: true,
-                        USER_EMAIL: true
-                    }
-                }
-            }
-        });
+        return await prisma.fT_LOG_USER.findMany();
 
     };
 

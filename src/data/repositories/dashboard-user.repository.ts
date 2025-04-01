@@ -9,10 +9,10 @@ export class DashboardUserRepository {
         return await prisma.fT_USER.findMany();
     };
 
-    static async getUsersByAdmin(id: number){
+    static async getUsersByAdmin(email: string){
         return await prisma.fT_USER.findMany({
             where: {
-                USER_ADMIN_ID: id
+                USER_ADMIN_EMAIL: email
             }
         });
     }

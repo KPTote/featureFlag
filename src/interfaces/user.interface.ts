@@ -7,7 +7,7 @@ export interface User {
     password: string,
     email: string,
     typeUser: ENUM_TYPE_USER,
-    adminId?: number,
+    managedBy?: string,
     profile?: Profile
 };
 

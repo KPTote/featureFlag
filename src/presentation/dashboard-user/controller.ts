@@ -19,9 +19,7 @@ export class DashboardUserController {
 
     public getUserByAdmin = (req: Request, res: Response) => {
 
-        const { id } = req.params;
-
-        this.dashboardUserService.getUsersByAdmin(Number(id))
+        this.dashboardUserService.getUsersByAdmin(req.body.emailAdmin)
             .then(users => res.json(users))
             .catch(error => this.handlerError(error, res));
 

@@ -13,7 +13,7 @@ export class DashboardUserRoutes {
         const controller = new DashboardUserController(dashboardService);
 
         router.get('/', controller.getAllUsers);
-        router.get('/:id', controller.getUserByAdmin);
+        router.post('/', controller.getUserByAdmin);
 
         return router;
 

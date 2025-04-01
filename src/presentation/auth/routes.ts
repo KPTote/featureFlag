@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { UserLogService } from "../services";
 import { AuthService } from "../services/auth/auth.service";
-import { InsertIntoLogService } from "../services/user-log/insert-into-log.service";
 import { AuthController } from "./controller";
 
 
@@ -13,9 +12,7 @@ export class AuthRoutes {
         const router = Router();
 
         const userLogService = new UserLogService();
-        const insertIntoLogService = new InsertIntoLogService(userLogService);
-    
-        const authService = new AuthService(insertIntoLogService);
+        const authService = new AuthService(userLogService);
         const controller = new AuthController(authService);
 
 

@@ -14,7 +14,7 @@ export class UserDto {
 
     static create(props: User): [string?, User?] {
 
-        const { firstName, lastName, email, password, typeUser, adminId } = props
+        const { firstName, lastName, email, password, typeUser, managedBy } = props
 
         if (!firstName) {
             return ['Missing Name'];
@@ -48,15 +48,10 @@ export class UserDto {
             return ['Type user incorrect'];
         };
 
-        if(typeUser.toUpperCase() === ENUM_TYPE_USER.TESTER && !adminId){
+        if(typeUser.toUpperCase() === ENUM_TYPE_USER.TESTER && !managedBy){
             return ['Administrator missing'];
         };
-
-        if( adminId && typeof adminId !== 'number' ){
-            props.adminId = Number(adminId);
-        };
-
-       
+      
         props.typeUser = typeUser.toUpperCase() as ENUM_TYPE_USER;
         const user = new UserDto(props);
 

@@ -14,12 +14,13 @@ export class DashboardUserService {
         }
     };
 
-    public async getUsersByAdmin(id: number){
+    public async getUsersByAdmin(email: string){
 
         try {
-            return await DashboardUserRepository.getUsersByAdmin(id);
+            return await DashboardUserRepository.getUsersByAdmin(email);
             
         } catch (error) {
+            throw CustomError.internalServer(`${error}`);
             
         }
 

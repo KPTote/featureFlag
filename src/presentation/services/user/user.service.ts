@@ -3,14 +3,16 @@ import { UserRepository } from "../../../data/repositories";
 import { CustomError } from "../../../domain/errors/custom.error";
 import { UserLogAction } from "../../../enums/user-log-action.enum";
 import { User } from "../../../interfaces/user.interface";
-import { InsertIntoLogService } from '../user-log/insert-into-log.service';
+import { UserLogService } from "../user-log/user-log.service";
+import { actionUserMessage } from "../utils/log-actions";
 
 
 
 export class UserService {
 
     constructor(
-        private readonly insertIntoLogService: InsertIntoLogService
+        private readonly userLogService: UserLogService
+
     ) { };
 
 
@@ -27,11 +29,18 @@ export class UserService {
 
             const userUpdated = await UserRepository.updateUser(id, user);
 
-            this.insertIntoLogService.intoUserLog({
+            this.userLogService.createEvent({
                 firstName: user.firstName,
                 lastName: user.lastName,
                 action: UserLogAction.UPDATE,
-                email: emailAdmin
+                actionMessage: actionUserMessage({
+                    action: UserLogAction.CREATE, 
+                    firstName: user.firstName, 
+                    lastName: user.lastName,
+                    email: user.email
+                }),
+                emailExecutedBy: emailAdmin,
+                emailUserAffected: user.email
             });
 
             return {
@@ -59,11 +68,18 @@ export class UserService {
             const hash = EncryptPassUser.hash(newPass);
             const changePass = await UserRepository.changePassword(email, hash);
 
-            this.insertIntoLogService.intoUserLog({
+            this.userLogService.createEvent({
                 firstName: changePass.USER_FIRSTNAME,
                 lastName: changePass.USER_LASTNAME,
                 action: UserLogAction.UPDATE_PASS,
-                email: changePass.USER_EMAIL
+                actionMessage: actionUserMessage({
+                    action: UserLogAction.UPDATE_PASS, 
+                    firstName: changePass.USER_FIRSTNAME, 
+                    lastName: changePass.USER_LASTNAME,
+                    email: changePass.USER_EMAIL
+                }),
+                emailExecutedBy: changePass.USER_EMAIL,
+                emailUserAffected: changePass.USER_EMAIL
             });
 
             return {
@@ -80,9 +96,7 @@ export class UserService {
     };
 
 
-    //TODO: VERIFICAR CÓMO ELIMINAR EL USUARIO SIN AFECTAR EL LOG
-
-    public async deleteUser(emailUser: string, emailAdmin: string){
+    public async deleteUser(emailUser: string, emailAdmin: string) {
 
         const userExist = await UserRepository.verifyByEmail(emailUser);
 
@@ -92,19 +106,26 @@ export class UserService {
 
         try {
 
-            const changePass = await UserRepository.deleteUser(emailUser);
+            const userDeleted = await UserRepository.deleteUser(emailUser);
 
-            this.insertIntoLogService.intoUserLog({
-                firstName: changePass.USER_FIRSTNAME,
-                lastName: changePass.USER_LASTNAME,
+            this.userLogService.createEvent({
+                firstName: userDeleted.USER_FIRSTNAME,
+                lastName: userDeleted.USER_LASTNAME,
                 action: UserLogAction.DELETE,
-                email: emailAdmin
+                actionMessage: actionUserMessage({
+                   action: UserLogAction.DELETE, 
+                   firstName: userDeleted.USER_FIRSTNAME, 
+                   lastName: userDeleted.USER_LASTNAME,
+                   email: userDeleted.USER_EMAIL
+                }),
+                emailExecutedBy: emailAdmin,
+                emailUserAffected: userDeleted.USER_EMAIL
             });
 
             return {
-                firstName: changePass.USER_FIRSTNAME,
-                lastName: changePass.USER_LASTNAME,
-                email: changePass.USER_EMAIL,
+                firstName: userDeleted.USER_FIRSTNAME,
+                lastName: userDeleted.USER_LASTNAME,
+                email: userDeleted.USER_EMAIL,
                 deleted: 'OK'
             };
 

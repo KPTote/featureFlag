@@ -1,15 +1,23 @@
 
-export const actionUserMessage = (action: number, firstName: string, lastName: string): string => {
+interface ActionUserMessageProps {
+    action: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+};
 
-    switch (action) {
+
+export const actionUserMessage = (props: ActionUserMessageProps): string => {
+
+    switch (props.action) {
         case 1:
-            return `USER CREATED: ${lastName},${firstName}`;
+            return `USER CREATED: (${props.lastName},${props.firstName})/${props.email}`;
         case 2:
-            return `USER UPDATED: ${lastName},${firstName}`;
+            return `USER UPDATED: (${props.lastName},${props.firstName})/${props.email}`;
         case 3:
-            return `USER PASS UPDATED: ${lastName},${firstName}`;
+            return `USER PASS UPDATED: (${props.lastName},${props.firstName})/${props.email}`;
         case 4:
-            return `USER DELETED: ${lastName},${firstName}`;
+            return `USER DELETED: (${props.lastName},${props.firstName})/${props.email}`;
         default:
             return 'ACTION NOT IDENTIFY';
     }

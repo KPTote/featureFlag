@@ -4,14 +4,16 @@ import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
 import { UserLogAction } from "../../../enums/user-log-action.enum";
 import { User } from "../../../interfaces/user.interface";
-import { InsertIntoLogService } from "../user-log/insert-into-log.service";
+import { UserLogService } from "../user-log/user-log.service";
+import { actionUserMessage } from "../utils/log-actions";
+
 
 
 
 export class AuthService {
 
     constructor(
-        private readonly insertIntoLogService: InsertIntoLogService
+        private readonly userLogService: UserLogService
     ) { }
 
     public async registerUser(registerUserDto: User, emailAdmin: string) {
@@ -24,8 +26,8 @@ export class AuthService {
             throw CustomError.badRequest('Email aready exist');
         };
 
-        if (registerUserDto.adminId) {
-            const verifyAdmin = await AuthRepository.findById(registerUserDto.adminId);
+        if (registerUserDto.managedBy) {
+            const verifyAdmin = await AuthRepository.findByEmail(registerUserDto.managedBy);
 
             if (!verifyAdmin) {
                 throw CustomError.badRequest('Invalid administrator');
@@ -41,11 +43,18 @@ export class AuthService {
 
             const { USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL } = await AuthRepository.create(registerUserDto);
 
-            this.insertIntoLogService.intoUserLog({
+            this.userLogService.createEvent({
                 firstName: USER_FIRSTNAME,
                 lastName: USER_LASTNAME,
                 action: UserLogAction.CREATE,
-                email: emailAdmin
+                actionMessage: actionUserMessage({
+                    action: UserLogAction.CREATE, 
+                    firstName: USER_FIRSTNAME, 
+                    lastName: USER_LASTNAME,
+                    email: USER_EMAIL
+                }),
+                emailExecutedBy: emailAdmin,
+                emailUserAffected: USER_EMAIL
             });
 
 

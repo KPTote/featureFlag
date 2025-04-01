@@ -2,7 +2,7 @@ export interface UserHistoryLog{
     logId: number;
     dateTime: Date;
     details: string;
-    performedByUser: PerformedByUser;
+    executedBy: string;
 }
 
 interface PerformedByUser{
@@ -14,12 +14,12 @@ interface PerformedByUser{
 
 
 export interface CreateUserLog{
-    id: number;
     firstName: string;
     lastName: string;
     action: number;
-    actionMessage?: string;
-    email?: string;
+    actionMessage: string;
+    emailExecutedBy: string;
+    emailUserAffected: string;
 }
 
 export interface IntoUserLog {

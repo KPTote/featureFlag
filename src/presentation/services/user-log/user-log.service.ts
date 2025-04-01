@@ -29,12 +29,7 @@ export class UserLogService {
                     logId: logs.LOGU_ID,
                     dateTime: logs.LOGU_DATE_TIME,
                     details: logs.LOGU_DETAILS,
-                    performedByUser: {
-                        id: logs.USER_ID,
-                        firstName: logs.user.USER_FIRSTNAME,
-                        lastName: logs.user.USER_LASTNAME,
-                        email: logs.user.USER_EMAIL
-                    }
+                    executedBy: logs.LOGU_EXECUTED_BY
                 }
             } );
             

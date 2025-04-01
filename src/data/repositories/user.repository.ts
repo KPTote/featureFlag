@@ -15,7 +15,7 @@ export class UserRepository {
                 USER_PROFILE: user.profile,
                 USER_PASSWORD: user.password,
                 USER_TYPE_USER: user.typeUser,
-                USER_ADMIN_ID: user.adminId,
+                USER_ADMIN_EMAIL: user.managedBy,
                 USER_EMAIL: user.email
             }
         });

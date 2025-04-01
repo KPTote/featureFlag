@@ -22,7 +22,7 @@ export class AuthRepository {
                 USER_PASSWORD: userProps.password ?? '',
                 USER_EMAIL: userProps.email ?? '',
                 USER_TYPE_USER: userProps.typeUser ?? '',
-                USER_ADMIN_ID: userProps.adminId,
+                USER_ADMIN_EMAIL: userProps.managedBy ?? '',
                 USER_PROFILE: userProps.profile
             }
         });
