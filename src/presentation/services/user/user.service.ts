@@ -31,19 +31,7 @@ export class UserService {
 
             const userUpdated = await UserRepository.updateUser(id, user);
 
-            this.userLogService.createEvent({
-                firstName: user.firstName,
-                lastName: user.lastName,
-                action: UserLogAction.UPDATE,
-                actionMessage: actionUserMessage({
-                    action: UserLogAction.CREATE, 
-                    firstName: user.firstName, 
-                    lastName: user.lastName,
-                    email: user.email
-                }),
-                emailExecutedBy: emailAdmin,
-                emailUserAffected: user.email
-            });
+            await this.insertIntoLog(userUpdated, UserLogAction.UPDATE, emailAdmin);
 
             return {
                 firstName: userUpdated.USER_FIRSTNAME,
@@ -70,19 +58,7 @@ export class UserService {
             const hash = EncryptPassUser.hash(newPass);
             const changePass = await UserRepository.changePassword(email, hash);
 
-            this.userLogService.createEvent({
-                firstName: changePass.USER_FIRSTNAME,
-                lastName: changePass.USER_LASTNAME,
-                action: UserLogAction.UPDATE_PASS,
-                actionMessage: actionUserMessage({
-                    action: UserLogAction.UPDATE_PASS, 
-                    firstName: changePass.USER_FIRSTNAME, 
-                    lastName: changePass.USER_LASTNAME,
-                    email: changePass.USER_EMAIL
-                }),
-                emailExecutedBy: changePass.USER_EMAIL,
-                emailUserAffected: changePass.USER_EMAIL
-            });
+            await this.insertIntoLog(changePass, UserLogAction.UPDATE_PASS, changePass.USER_EMAIL);
 
             return {
                 firstName: changePass.USER_FIRSTNAME,
@@ -100,29 +76,13 @@ export class UserService {
 
     public async deleteUser(emailUser: string, emailAdmin: string) {
 
-        const userExist = await UserRepository.verifyByEmail(emailUser);
-
-        if (!userExist) {
-            throw CustomError.badRequest(`User don't found`);
-        };
+        await this.validationsForDelete(emailUser, emailAdmin);
 
         try {
 
             const userDeleted = await UserRepository.deleteUser(emailUser);
 
-            this.userLogService.createEvent({
-                firstName: userDeleted.USER_FIRSTNAME,
-                lastName: userDeleted.USER_LASTNAME,
-                action: UserLogAction.DELETE,
-                actionMessage: actionUserMessage({
-                   action: UserLogAction.DELETE, 
-                   firstName: userDeleted.USER_FIRSTNAME, 
-                   lastName: userDeleted.USER_LASTNAME,
-                   email: userDeleted.USER_EMAIL
-                }),
-                emailExecutedBy: emailAdmin,
-                emailUserAffected: userDeleted.USER_EMAIL
-            });
+            await this.insertIntoLog(userDeleted, UserLogAction.DELETE, emailAdmin);
 
             return {
                 firstName: userDeleted.USER_FIRSTNAME,
@@ -137,5 +97,39 @@ export class UserService {
         };
 
     };
+
+    private async validationsForDelete(emailUser: string, emailAdmin: string) {
+        const userExist = await UserRepository.verifyByEmail(emailUser);
+
+        if (!userExist) {
+            throw CustomError.badRequest(`User don't found`);
+        };
+
+        const useradmin = await UserRepository.verifyByEmail(emailAdmin);
+
+        if (!useradmin) {
+            throw CustomError.badRequest(`User don't found`);
+        };
+
+        if (useradmin.USER_PROFILE !== userExist.USER_PROFILE) {
+            throw CustomError.badRequest('User profile is incorrect');
+        };
+    };
+
+    private async insertIntoLog(user: any, action: UserLogAction, emailAdmin: string) {
+        this.userLogService.createEvent({
+            firstName: user.USER_FIRSTNAME,
+            lastName: user.USER_LASTNAME,
+            action: action,
+            actionMessage: actionUserMessage({
+                action: action,
+                firstName: user.USER_FIRSTNAME,
+                lastName: user.USER_LASTNAME,
+                email: user.USER_EMAIL
+            }),
+            emailExecutedBy: emailAdmin,
+            emailUserAffected: user.USER_EMAIL
+        });
+    }
 
 };
