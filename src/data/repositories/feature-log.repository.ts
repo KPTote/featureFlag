@@ -5,7 +5,7 @@ import { prisma } from "../postgres";
 export class FeatureLogRepository {
 
 
-    static async insert(props: CreateFeatureLog){
+    static async insert(props: CreateFeatureLog) {
 
         return await prisma.fT_LOG_FEATURE.create({
             data: {
@@ -19,8 +19,16 @@ export class FeatureLogRepository {
 
     };
 
-    static async getAll(){
+    static async getAll() {
         return await prisma.fT_LOG_FEATURE.findMany();
     };
+
+    static async getByEmail(email: string) {
+        return await prisma.fT_LOG_FEATURE.findMany({
+            where: {
+                LOGF_EXECUTED_BY: email
+            }
+        });
+    }
 
 };

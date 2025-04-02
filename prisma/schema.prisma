@@ -29,9 +29,7 @@ model FT_USER{
   USER_EMAIL String @unique @db.VarChar
   USER_TYPE_USER ENUM_TYPE_USER
   USER_PROFILE ENUM_PROFILE?
-  USER_ADMIN_EMAIL? String @db.VarChar
-  USER_ADMIN FT_USER? @relation("AdminToUser", fields: [USER_ADMIN_EMAIL], references: [USER_EMAIL])
-  USER_USERS_RELATION FT_USER[] @relation("AdminToUser")
+  USER_ADMIN_EMAIL String? @db.VarChar
 }
 
 

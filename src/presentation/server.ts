@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import { isAllowedUser } from './middlewares';
+import { transforToUpper } from './middlewares/transform-to-upper.middleware';
 
 
 export class Server {
@@ -18,6 +19,7 @@ export class Server {
         //Middlewares
         this.app.use(express.json());
         this.app.use(isAllowedUser);
+        this.app.use(transforToUpper)
         // this.app.use((req: Request, res: Response, next: NextFunction) => {
 
         //     console.log(req.headers);

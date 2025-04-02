@@ -27,6 +27,8 @@ export class UserService {
 
         try {
 
+            user.password = EncryptPassUser.hash(user.password);
+
             const userUpdated = await UserRepository.updateUser(id, user);
 
             this.userLogService.createEvent({

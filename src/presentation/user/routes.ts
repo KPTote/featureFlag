@@ -15,7 +15,7 @@ export class UserRoutes{
 
         router.put('/edit-account/:id', controller.update);
         router.post('/change-password/', controller.changePassword);
-        router.delete('/', controller.delete);
+        router.post('/delete-user', controller.delete);
 
         return router;
 

@@ -33,7 +33,6 @@ export class UserRepository {
     };
 
     static async deleteUser(email: string){
-        console.log(email);
         return await prisma.fT_USER.delete({
             where: {
                 USER_EMAIL: email

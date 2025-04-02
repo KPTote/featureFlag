@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { AuthRoutes } from "./auth/routes";
 import { DashboardUserRoutes } from "./dashboard-user/routes";
+import { FeatureHistoryRoutes } from "./feature-history/routes";
 import { FeatureRoutes } from "./feature/routes";
 import { UserRoutes } from "./user/routes";
 import { UserHistoryRoutes } from "./users-history/routes";
@@ -17,6 +18,7 @@ export class AppRoutes{
         router.use('/api/dashboard-user/', DashboardUserRoutes.routes);
         router.use('/api/users-history/', UserHistoryRoutes.routes );
         router.use('/api/user/', UserRoutes.routes );
+        router.use('/api/feature-history/', FeatureHistoryRoutes.routes)
 
         return router;
 

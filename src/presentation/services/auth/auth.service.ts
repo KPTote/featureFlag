@@ -2,6 +2,7 @@ import { EncryptPassUser } from "../../../configs";
 import { AuthRepository } from "../../../data/repositories";
 import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
+import { ENUM_TYPE_USER } from "../../../enums";
 import { UserLogAction } from "../../../enums/user-log-action.enum";
 import { User } from "../../../interfaces/user.interface";
 import { UserLogService } from "../user-log/user-log.service";
@@ -26,14 +27,20 @@ export class AuthService {
             throw CustomError.badRequest('Email aready exist');
         };
 
-        if (registerUserDto.managedBy) {
-            const verifyAdmin = await AuthRepository.findByEmail(registerUserDto.managedBy);
+
+        if(registerUserDto.typeUser === ENUM_TYPE_USER.TESTER){
+            const verifyAdmin = await AuthRepository.findByEmail(emailAdmin);
 
             if (!verifyAdmin) {
                 throw CustomError.badRequest('Invalid administrator');
             };
 
-        }
+            if(verifyAdmin.USER_PROFILE !== registerUserDto.profile){
+                throw CustomError.badRequest('Profile must be the same with their administrador');
+            };
+
+            registerUserDto.managedBy = verifyAdmin.USER_EMAIL;
+        };
 
 
         try {

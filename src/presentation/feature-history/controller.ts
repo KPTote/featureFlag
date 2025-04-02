@@ -1,32 +1,35 @@
 import { Request, Response } from "express";
-import { CustomError } from '../../domain/errors/custom.error';
-import { DashboardUserService } from './../services/';
+import { CustomError } from "../../domain/errors/custom.error";
+import { FeatureLogService } from "../services";
 
 
-export class DashboardUserController {
+export class FeatureHistoryController {
 
     constructor(
-        private readonly dashboardUserService: DashboardUserService
+        private featureLogService: FeatureLogService
     ) { };
 
-    public getAllUsers = (req: Request, res: Response) => {
+    public getAll = (req: Request, res: Response) => {
 
-        this.dashboardUserService.getAllUsers()
+
+        this.featureLogService.getAll()
             .then(users => res.json(users))
             .catch(error => this.handlerError(error, res));
 
+
     };
 
-    public getUserByAdmin = (req: Request, res: Response) => {
 
-        const email = req.headers.email?.toString();
+    public getAllByEmail = (req: Request, res: Response) => {
 
-        this.dashboardUserService.getUsersByAdmin(email ?? '')
+        const email = req.headers.email;
+
+        this.featureLogService.getAllByEmail(email as string)
             .then(users => res.json(users))
             .catch(error => this.handlerError(error, res));
 
-    };
 
+    };
 
     private handlerError = (error: unknown, res: Response) => {
 

@@ -5,7 +5,7 @@ import { CreateFeatureLog } from "../../../interfaces/feature.interface";
 
 export class FeatureLogService {
 
-    static async createEvent(props: CreateFeatureLog) {
+    public async createEvent(props: CreateFeatureLog) {
 
         try {
 
@@ -18,10 +18,21 @@ export class FeatureLogService {
 
     };
 
-    static async getAll() {
+    public async getAll() {
         try {
 
             return await FeatureLogRepository.getAll();
+
+        } catch (error) {
+            throw CustomError.internalServer(`${error}`);
+        };
+    };
+
+    public async getAllByEmail(email: string){
+
+        try {
+
+            return await FeatureLogRepository.getByEmail(email);
 
         } catch (error) {
             throw CustomError.internalServer(`${error}`);

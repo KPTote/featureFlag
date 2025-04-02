@@ -59,7 +59,7 @@ export class FeatureRepository {
             }
         };
 
-        return typeUser === ENUM_TYPE_USER.USER_MAIN
+        return (typeUser === ENUM_TYPE_USER.USER_MAIN)
             ? await prisma.fT_FEATURE.findMany()
             : await prisma.fT_FEATURE.findMany(query)
 
