@@ -1,6 +1,6 @@
 import { ENUM_TYPE_USER, Profile } from "../../enums";
 import { Feature } from "../../interfaces/feature.interface";
-import { prisma } from "../postgres";
+import { prisma } from "../postgres-client";
 
 
 export class FeatureRepository {

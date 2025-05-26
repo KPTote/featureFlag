@@ -1,5 +1,5 @@
 import { CreateFeatureLog } from "../../interfaces/feature.interface";
-import { prisma } from "../postgres";
+import { prisma } from "../postgres-client";
 
 
 export class FeatureLogRepository {

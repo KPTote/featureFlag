@@ -1,5 +1,5 @@
 import { User } from "../../interfaces/user.interface";
-import { prisma } from "../postgres";
+import { prisma } from "../postgres-client";
 
 
 export class UserRepository {
