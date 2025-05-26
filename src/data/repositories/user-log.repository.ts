@@ -1,5 +1,7 @@
 import { CreateUserLog } from "../../interfaces/user-log.interface";
+import { UserLogSchema } from "../mongo/models/users-logs";
 import { prisma } from "../postgres-client";
+
 
 
 export class UserLogRepository {
@@ -7,11 +9,11 @@ export class UserLogRepository {
 
     static async insert(props: CreateUserLog) {
 
-        return await prisma.fT_LOG_USER.create({
-            data: {
-                LOGU_DETAILS: props.actionMessage ?? '',
-                LOGU_EXECUTED_BY: props.emailExecutedBy
-            }
+        console.log(props);
+
+        return await UserLogSchema.insertOne({
+            details: props.actionMessage ?? '',
+            executedBy: props.emailExecutedBy
         });
 
     };

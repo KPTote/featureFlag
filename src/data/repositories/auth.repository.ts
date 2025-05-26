@@ -1,5 +1,7 @@
 import { User } from "../../interfaces/user.interface";
 import { prisma } from "../postgres-client";
+import { UserModel } from './../mongo/models/user.model';
+
 
 
 export class AuthRepository {
@@ -7,26 +9,23 @@ export class AuthRepository {
 
     static async create(userProps: User) {
 
-        return await prisma.fT_USER.create({
-            data: {
-                USER_FIRSTNAME: userProps.firstName ?? '',
-                USER_LASTNAME: userProps.lastName ?? '',
-                USER_PASSWORD: userProps.password ?? '',
-                USER_EMAIL: userProps.email ?? '',
-                USER_TYPE_USER: userProps.typeUser ?? '',
-                USER_ADMIN_EMAIL: userProps.managedBy,
-                USER_PROFILE: userProps.profile
-            }
+        console.log(userProps);
+
+        return await UserModel.insertOne({
+            firstName: userProps.firstName ?? '',
+            lastName: userProps.lastName ?? '',
+            password: userProps.password ?? '',
+            email: userProps.email ?? '',
+            typeUser: userProps.typeUser ?? '',
+            managedBy: userProps.managedBy,
+            profile: userProps.profile
         });
 
     };
 
     static async findByEmail(email: string) {
-        console.log(email);
-        return await prisma.fT_USER.findFirst({
-            where: {
-                USER_EMAIL: email
-            }
+        return await UserModel.findOne({
+            email
         });
     };
 

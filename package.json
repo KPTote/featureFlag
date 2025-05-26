@@ -22,11 +22,12 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@prisma/client": "^6.8.2",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "env-var": "^7.5.0",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.15.0"
+    "mongoose": "^8.15.1"
   }
 }

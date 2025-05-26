@@ -2,7 +2,7 @@ import { EncryptPassUser, envs, JwtAdapter } from "../../../configs";
 import { AuthRepository } from "../../../data/repositories";
 import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
-import { ENUM_TYPE_USER } from "../../../enums";
+import { ENUM_TYPE_USER } from "../../../enums/type-user.enum";
 import { UserLogAction } from "../../../enums/user-log-action.enum";
 import { User } from "../../../interfaces/user.interface";
 import { UserLogService } from "../user-log/user-log.service";
@@ -19,29 +19,29 @@ export class AuthService {
 
     public async registerUser(registerUserDto: User, emailAdmin: string) {
 
-        console.log(emailAdmin);
-
-
         const emailExist = await AuthRepository.findByEmail(registerUserDto.email);
-
 
         if (emailExist) {
             throw CustomError.badRequest('Email aready exist');
         };
 
 
-        if(registerUserDto.typeUser === ENUM_TYPE_USER.TESTER){
+        if (registerUserDto.typeUser === ENUM_TYPE_USER.TESTER) {
             const verifyAdmin = await AuthRepository.findByEmail(emailAdmin);
 
             if (!verifyAdmin) {
                 throw CustomError.badRequest('Invalid administrator');
             };
 
-            if(verifyAdmin.USER_PROFILE !== registerUserDto.profile){
+            if (verifyAdmin.typeUser !== ENUM_TYPE_USER.ADMIN) {
+                throw CustomError.badRequest('Invalid administrator');
+            }
+
+            if (verifyAdmin.profile !== registerUserDto.profile) {
                 throw CustomError.badRequest('Profile must be the same with their administrador');
             };
 
-            registerUserDto.managedBy = verifyAdmin.USER_EMAIL;
+            registerUserDto.managedBy = verifyAdmin.email!;
         };
 
 
@@ -50,28 +50,27 @@ export class AuthService {
 
             registerUserDto.password = EncryptPassUser.hash(registerUserDto.password);
 
-            const { USER_FIRSTNAME, USER_LASTNAME, USER_EMAIL } = await AuthRepository.create(registerUserDto);
+            const { email, typeUser, profile, firstName, lastName } = await AuthRepository.create(registerUserDto);
 
             this.userLogService.createEvent({
-                firstName: USER_FIRSTNAME,
-                lastName: USER_LASTNAME,
+                firstName,
+                lastName,
                 action: UserLogAction.CREATE,
                 actionMessage: actionUserMessage({
-                    action: UserLogAction.CREATE, 
-                    firstName: USER_FIRSTNAME, 
-                    lastName: USER_LASTNAME,
-                    email: USER_EMAIL
+                    action: UserLogAction.CREATE,
+                    firstName,
+                    lastName,
+                    email: email!
                 }),
                 emailExecutedBy: emailAdmin,
-                emailUserAffected: USER_EMAIL
+                emailUserAffected: email!
             });
 
-
             return {
-                userFirstName: USER_FIRSTNAME,
-                userLastName: USER_LASTNAME,
-                userEmail: USER_EMAIL
-            };
+                email,
+                typeUser,
+                profile
+            }
 
 
 
@@ -92,23 +91,23 @@ export class AuthService {
             throw CustomError.badRequest("Email doesn't exist");
         };
 
-        const isMatching = EncryptPassUser.compare(password, emailExist.USER_PASSWORD);
+        const isMatching = EncryptPassUser.compare(password, emailExist.password);
 
         if (!isMatching) {
             throw CustomError.badRequest("Invalid User or Password");
         };
 
-        const token = await JwtAdapter.generateToken({email}, envs.JWT_TIME);
+        const token = await JwtAdapter.generateToken({ email }, envs.JWT_TIME);
 
-        if(!token){
+        if (!token) {
             throw CustomError.badRequest("Error while creating JWT");
         };
 
 
         return {
-            email: emailExist.USER_EMAIL,
-            firstName: emailExist.USER_FIRSTNAME,
-            lastName: emailExist.USER_LASTNAME,
+            email: emailExist.email,
+            firstName: emailExist.firstName,
+            lastName: emailExist.lastName,
             token
         };
 

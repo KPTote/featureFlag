@@ -1,5 +1,5 @@
 import { envs } from "./configs/envs";
-import { MongoDataBase } from "./data/mongo";
+import { MongoDataBase } from "./data/mongo/mongo-database";
 import { AppRoutes } from "./presentation/routes";
 import { Server } from "./presentation/server";
 
@@ -10,6 +10,8 @@ const appStart = ( () => {
 });
 
 async function main(){
+
+    console.log(envs.MONGO_URL);
 
     await MongoDataBase.connect({
         mongoUrl: envs.MONGO_URL,
