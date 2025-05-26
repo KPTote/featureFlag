@@ -3,14 +3,13 @@ version: '3.8'
 
 services:
 
-  postgres-db:
-    image: postgres
-    container_name: feature_manager
+  mongo-db:
+    image: mongo:6.0.6
+    restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_DB: fm_DB
-      POSTGRES_PASSWORD: fm2025
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./mongo:/data/db
     ports:
-      - 5432:5432
+      - 27017:27017
