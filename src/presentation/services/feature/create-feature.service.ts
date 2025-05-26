@@ -60,6 +60,7 @@ export class CreateFeatureService {
             throw CustomError.badRequest('Feature already exist');
         };
 
+        console.log(emailUser);
         const createdBy = await AuthRepository.findByEmail(emailUser);
 
         if(!createdBy){

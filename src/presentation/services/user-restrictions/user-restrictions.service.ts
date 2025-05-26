@@ -17,6 +17,10 @@ export class UserRestrictionsService {
             return this.testerUser(props);
         };
 
+        if (props.typeUser === ENUM_TYPE_USER.USER_INIT){
+            return this.userInit(props);
+        };
+
 
         return true;
 
@@ -40,6 +44,10 @@ export class UserRestrictionsService {
         if (props.url.includes(Paths.FEATURE_BASE_URL || Paths.USER_BASE_URL ) && blockedMethods.includes(props.method)) return false;
 
         return true;
+    };
+
+    private userInit(props: Restrictions): boolean{
+        return props.url === Paths.REGISTER;
     };
 
 };

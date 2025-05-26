@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 import { UserLogService } from "../services";
 import { AuthService } from "../services/auth/auth.service";
 import { AuthController } from "./controller";
@@ -17,7 +18,7 @@ export class AuthRoutes {
 
 
         router.post('/login', controller.login);
-        router.post('/register', controller.register);
+        router.post('/register', [AuthMiddleware.validateJWT], controller.register);
 
 
         return router;

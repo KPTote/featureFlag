@@ -1,4 +1,4 @@
-import { EncryptPassUser } from "../../../configs";
+import { EncryptPassUser, envs, JwtAdapter } from "../../../configs";
 import { AuthRepository } from "../../../data/repositories";
 import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
@@ -18,6 +18,8 @@ export class AuthService {
     ) { }
 
     public async registerUser(registerUserDto: User, emailAdmin: string) {
+
+        console.log(emailAdmin);
 
 
         const emailExist = await AuthRepository.findByEmail(registerUserDto.email);
@@ -96,14 +98,22 @@ export class AuthService {
             throw CustomError.badRequest("Invalid User or Password");
         };
 
+        const token = await JwtAdapter.generateToken({email}, envs.JWT_TIME);
+
+        if(!token){
+            throw CustomError.badRequest("Error while creating JWT");
+        };
+
 
         return {
             email: emailExist.USER_EMAIL,
             firstName: emailExist.USER_FIRSTNAME,
-            lastName: emailExist.USER_LASTNAME
+            lastName: emailExist.USER_LASTNAME,
+            token
         };
 
     };
+
 
 
 };

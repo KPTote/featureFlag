@@ -16,6 +16,8 @@ export class AuthController{
 
         const {email , password } = req.body;
 
+        console.log(email);
+
         const [error, loginDto] = LoginUserDto.login(email, password);
 
         if(error){
@@ -32,6 +34,7 @@ export class AuthController{
     public register = (req: Request, res: Response) => {
 
         const { email = '' } = req.headers;
+        console.log(email);
  
         const [error, userDto] = UserDto.create(req.body);
 
@@ -50,6 +53,7 @@ export class AuthController{
 
     private handlerError = (error: unknown, res: Response) =>{
 
+        console.log(error);
 
 
         if( error instanceof CustomError){

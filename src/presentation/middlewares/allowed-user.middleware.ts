@@ -6,13 +6,14 @@ import { UserRestrictionsService } from "../services";
 export const isAllowedUser = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email = '' } = req.headers;
+    console.log(email);
 
-    try {
+    try {     
 
         const user = await AuthRepository.findByEmail(email as string);
 
         if (!user) {
-            res.status(401).json({ error: `User don't exist M` });
+            res.status(401).json({ error: `User don't exist` });
             return;
         };
 

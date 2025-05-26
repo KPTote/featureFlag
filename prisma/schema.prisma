@@ -19,6 +19,7 @@ enum ENUM_TYPE_USER{
   USER_MAIN
   ADMIN
   TESTER
+  USER_INIT
 }
 
 model FT_USER{

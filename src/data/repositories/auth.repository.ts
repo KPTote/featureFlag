@@ -22,6 +22,7 @@ export class AuthRepository {
     };
 
     static async findByEmail(email: string) {
+        console.log(email);
         return await prisma.fT_USER.findFirst({
             where: {
                 USER_EMAIL: email
