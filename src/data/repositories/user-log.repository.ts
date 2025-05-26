@@ -1,5 +1,5 @@
 import { CreateUserLog } from "../../interfaces/user-log.interface";
-import { prisma } from "../postgres";
+import { prisma } from "../postgres-client";
 
 
 export class UserLogRepository {
