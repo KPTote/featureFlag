@@ -11,8 +11,10 @@ export class FeatureHistoryRoutes{
         const featureLogService = new FeatureLogService();
         const controller = new FeatureHistoryController(featureLogService);
 
+
         router.get('/', controller.getAll);
-        router.get('/by-user', controller.getAllByEmail)
+        router.get('/by-user', controller.getAllByEmail);
+        router.post('/insert-into-log', controller.insertIntoLog)
 
         return router;
     };

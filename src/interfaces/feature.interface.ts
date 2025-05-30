@@ -1,16 +1,12 @@
-import { Profile, StatusFeature } from "../enums";
+import { Profile } from "../enums";
 
-export interface Feature {
-    name: string;
-    line: string;
-    profile: Profile;
-    statusFeature: StatusFeature;
-};
-
-export interface CreateFeatureLog {
-    details: string;
-    executedBy: string;
-    featureId: number;
+export interface FeatureLogServiceProps {
+    featureStatus: string;
     featureName: string;
-    featureProfil: Profile;
+    featureProfile: Profile;
 };
+
+export interface FeatureLogRepositoryProps extends FeatureLogServiceProps{
+    executedBy: string,
+    dateTime: string
+}

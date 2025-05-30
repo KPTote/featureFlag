@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { FeatureLogDto } from "../../domain/dtos/feature-log/feature-log.dto";
 import { CustomError } from "../../domain/errors/custom.error";
 import { FeatureLogService } from "../services";
 
@@ -29,6 +30,23 @@ export class FeatureHistoryController {
             .catch(error => this.handlerError(error, res));
 
 
+    };
+
+    public insertIntoLog = (req: Request, res: Response) => {
+
+        const [error, insertIntoLogDto ] = FeatureLogDto.insertIntoLog(req.body)
+
+        console.log(error);
+
+        if(error){
+            res.status(400).json({error});
+        };
+
+        const email = req.headers.email as string;
+
+        this.featureLogService.createEvent(insertIntoLogDto!, email )
+        .then(log => res.json(log))
+        .catch(error => this.handlerError(error,res))
     };
 
     private handlerError = (error: unknown, res: Response) => {

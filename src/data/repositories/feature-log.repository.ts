@@ -1,20 +1,18 @@
-import { CreateFeatureLog } from "../../interfaces/feature.interface";
+import { FeatureLogRepositoryProps } from "../../interfaces/feature.interface";
+import { FeatureLogSchema } from "../mongo/models/feature-log";
 import { prisma } from "../postgres-client";
-
 
 export class FeatureLogRepository {
 
 
-    static async insert(props: CreateFeatureLog) {
+    static async insert(props: FeatureLogRepositoryProps) {
 
-        return await prisma.fT_LOG_FEATURE.create({
-            data: {
-                LOGF_DETAILS: props.details,
-                LOGF_EXECUTED_BY: props.executedBy,
-                LOGF_FEATURE_ID: props.featureId,
-                LOGF_FEATURE_NAME: props.featureName,
-                LOGF_FEATURE_PROFILE: props.featureProfil
-            }
+        return await FeatureLogSchema.insertOne({
+            featureStatus: props.featureStatus,
+            executedBy: props.executedBy,
+            featureProfile: props.featureProfile,
+            featureName: props.featureName,
+            dateTimeExecution: props.dateTime
         });
 
     };

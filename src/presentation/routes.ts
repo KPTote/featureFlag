@@ -2,7 +2,6 @@ import { Router } from "express";
 import { AuthRoutes } from "./auth/routes";
 import { DashboardUserRoutes } from "./dashboard-user/routes";
 import { FeatureHistoryRoutes } from "./feature-history/routes";
-import { FeatureRoutes } from "./feature/routes";
 import { isAllowedUser } from "./middlewares";
 import { AuthMiddleware } from "./middlewares/auth.middleware";
 import { UserRoutes } from "./user/routes";
@@ -19,7 +18,6 @@ export class AppRoutes{
 
         router.use([AuthMiddleware.validateJWT]);
         router.use([isAllowedUser]);
-        router.use('/api/feature/', FeatureRoutes.routes);
         router.use('/api/dashboard-user/', DashboardUserRoutes.routes);
         router.use('/api/users-history/', UserHistoryRoutes.routes );
         router.use('/api/user/', UserRoutes.routes );

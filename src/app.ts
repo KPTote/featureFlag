@@ -11,8 +11,6 @@ const appStart = ( () => {
 
 async function main(){
 
-    console.log(envs.MONGO_URL);
-
     await MongoDataBase.connect({
         mongoUrl: envs.MONGO_URL,
         dbName: envs.MONGO_DB_NAME
