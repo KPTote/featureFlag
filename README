@@ -1,7 +1,7 @@
 
 FEATURE TRACE MANAGER
 
-Developed with the objective to have a control of all features implemented on the online banking project. This project is able to manage different user types and depending on the characteristics of the user is able to create, modify, delete and read all the users. Also, depending on these characteristics is able to work with the features. Also, this project is able to keep a registry of all the changes done by the users. 
+Developed with the objective to have a control of all features implemented on the online banking project. This project allows you to have a registry of the configuration when an user (QA or developer) makes login. 
 
 To start to work with this project it is necessary to follow these steps. Please, to avoid possible problems you need to execute these steps in order:
 
@@ -15,15 +15,11 @@ To start to work with this project it is necessary to follow these steps. Please
 
       - npm run docker_compose_db
 
- 4. Generate schema from Prisma ORM, this is for generate all the tables:
+ 4. Create a init user using the name and password provided in the .env file:
 
-      - npm run prisma_generate_schema
+      - npm run seed
 
- 5. Create a init user using the name and password provided in the .env file:
-
-      - npm run prisma_seed
-
- 6. Run the project:
+ 5. Run the project:
 
       - npm run dev
 
