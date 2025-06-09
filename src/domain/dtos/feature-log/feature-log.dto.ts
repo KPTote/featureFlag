@@ -33,7 +33,7 @@ export class FeatureLogDto {
             return ['Missing profile'];
         };
 
-        if (featureProfile && ![Profile.BANPAIS, Profile.BIESV, Profile.BIPA].some(prof => prof === featureProfile)) {
+        if (featureProfile && ![Profile.BANPAIS, Profile.BISV, Profile.BIPA].some(prof => prof === featureProfile)) {
             return ['Profile incorrect'];
         };
 

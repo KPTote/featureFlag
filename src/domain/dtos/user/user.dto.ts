@@ -1,5 +1,5 @@
 import { regularExps } from "../../../configs/regular-exp";
-import { ENUM_TYPE_USER } from "../../../enums";
+import { ENUM_TYPE_USER, Profile } from "../../../enums";
 import { User } from "../../../interfaces/user.interface";
 
 
@@ -44,15 +44,19 @@ export class UserDto {
             return ['Missing type user'];
         };
 
-        if(!profile && typeUser !== ENUM_TYPE_USER.USER_MAIN){
+        if (!profile && typeUser !== ENUM_TYPE_USER.USER_MAIN) {
             return ['Missing profile'];
+        };
+
+        if (profile && ![Profile.BANPAIS, Profile.BISV, Profile.BIPA].some(prof => prof === profile)) {
+            return ['Profile incorrect'];
         };
 
         if (typeUser && ![ENUM_TYPE_USER.ADMIN, ENUM_TYPE_USER.USER_MAIN, ENUM_TYPE_USER.TESTER].some(type => type === typeUser.toUpperCase())) {
             return ['Type user incorrect'];
         };
 
-      
+
         props.typeUser = typeUser.toUpperCase() as ENUM_TYPE_USER;
         const user = new UserDto(props);
 

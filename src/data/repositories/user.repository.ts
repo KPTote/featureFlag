@@ -1,27 +1,9 @@
-import { User } from "../../interfaces/user.interface";
 import { UserModel } from "../mongo/models/user.model";
 import { prisma } from "../postgres-client";
 
 
 
 export class UserRepository {
-
-    static async updateUser(id: number, user: User) {
-        return await prisma.fT_USER.update({
-            where: {
-                USER_ID: id
-            },
-            data: {
-                USER_FIRSTNAME: user.firstName,
-                USER_LASTNAME: user.lastName,
-                USER_PROFILE: user.profile,
-                USER_PASSWORD: user.password,
-                USER_TYPE_USER: user.typeUser,
-                USER_ADMIN_EMAIL: user.managedBy,
-                USER_EMAIL: user.email
-            }
-        });
-    };
 
     static async changePassword(email: string, newPass: string){
         return await UserModel.updateOne(

@@ -40,6 +40,7 @@ export class FeatureHistoryController {
 
         if(error){
             res.status(400).json({error});
+            return;
         };
 
         const email = req.headers.email as string;

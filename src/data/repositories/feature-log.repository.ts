@@ -1,6 +1,7 @@
 import { FeatureLogRepositoryProps } from "../../interfaces/feature.interface";
+import { UserModel } from "../indext";
 import { FeatureLogSchema } from "../mongo/models/feature-log";
-import { prisma } from "../postgres-client";
+
 
 export class FeatureLogRepository {
 
@@ -22,10 +23,15 @@ export class FeatureLogRepository {
     };
 
     static async getByEmail(email: string) {
-        return await prisma.fT_LOG_FEATURE.findMany({
-            where: {
-                LOGF_EXECUTED_BY: email
-            }
+
+        return await FeatureLogSchema.find({
+            executedBy: email
+        });
+    }
+
+    static async getUser(email: string) {
+        return await UserModel.find({
+            email
         });
     }
 

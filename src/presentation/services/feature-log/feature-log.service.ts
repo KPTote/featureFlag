@@ -9,8 +9,19 @@ export class FeatureLogService {
 
         const dateTime = this.getDateTime();
         const propsRepository = { ...featureLogDto, executedBy, dateTime };
+        const email = executedBy;
 
         try {
+
+            const [{profile}] = await FeatureLogRepository.getUser(email);
+
+            if(!profile){
+                throw CustomError.badRequest('Invalid User');
+            }
+
+            if(!this.verifyProfile(profile, propsRepository.featureProfile)){
+                throw CustomError.badRequest('User profile and feature profile must be the same');
+            }
 
             const {executedBy, dateTimeExecution } = await FeatureLogRepository.insert(propsRepository);
 
@@ -53,7 +64,15 @@ export class FeatureLogService {
 
         try {
 
-            return await FeatureLogRepository.getByEmail(email);
+            const logArr = await FeatureLogRepository.getByEmail(email);
+            return logArr.map(log => {
+                return {
+                    featureConfig: log.featureConfig,
+                    browser: log.browser,
+                    featureProfile: log.featureProfile,
+                    dateTimeExecution: log.dateTimeExecution
+                }
+            });
 
         } catch (error) {
             throw CustomError.internalServer(`${error}`);
@@ -70,6 +89,10 @@ export class FeatureLogService {
 
         return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} ${timePeriod}`;
     };
+
+    private verifyProfile(featureProfile: string, userProfile: string):boolean{
+        return featureProfile === userProfile;
+    }
 
 
 };
