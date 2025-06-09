@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ChangePassDto, DeleteUserDto, UserDto } from "../../domain/dtos";
+import { ChangePassDto, DeleteUserDto } from "../../domain/dtos";
 import { CustomError } from "../../domain/errors/custom.error";
 import { UserService } from '../services/user/user.service';
 
@@ -9,25 +9,6 @@ export class UserController {
     constructor(
         private readonly userService: UserService
     ) { };
-
-    public update = (req: Request, res: Response) => {
-
-        const id = Number(req.params.id);
-        const email = req.headers.email?.toString();
-
-        const [error, userDto] = UserDto.create(req.body);
-
-        if (error) {
-            res.status(400).json({ error });
-            return;
-        };
-
-        this.userService.updateUser(id, userDto!, email ?? '')
-            .then(user => res.json(user))
-            .catch(error => this.handlerError(error, res))
-
-
-    };
 
     public changePassword = (req: Request, res: Response) => {
 

@@ -1,36 +1,32 @@
-import { Profile, StatusFeature } from "../../../enums";
-import { FeatureLogServiceProps } from "../../../interfaces/feature.interface";
+import { Profile } from "../../../enums";
+import { FeatureConfig, FeatureLogServiceProps } from "../../../interfaces/feature.interface";
 
 
 export class FeatureLogDto {
 
-    public readonly featureStatus: string;
-    public readonly featureName: string;
+    public readonly featureConfig: FeatureConfig[];
+    public readonly browser: string;
     public readonly featureProfile: Profile;
 
     constructor(
-        featureStatus: string, featureName: string, featureProfile: Profile
+        featureConfig: FeatureConfig[], browser: string, featureProfile: Profile
     ) {
-        this.featureStatus = featureStatus;
-        this.featureName = featureName;
+        this.featureConfig = featureConfig;
+        this.browser = browser;
         this.featureProfile = featureProfile;
     };
 
     static insertIntoLog(props: FeatureLogServiceProps): [string?, FeatureLogDto?] {
 
 
-        const { featureStatus, featureName, featureProfile } = props;
+        const { featureConfig, browser, featureProfile } = props;
 
-        if (!featureStatus) {
-            return ['Missing feature status'];
+        if (!featureConfig) {
+            return ['Missing feature configuration'];
         };
 
-        if (featureStatus && ![StatusFeature.ON, StatusFeature.OFF].some(state => state === featureStatus)) {
-            return ['Status incorrect'];
-        };
-
-        if (!featureName) {
-            return ['Missing feature name'];
+        if (!browser) {
+            return ['Missing browser information'];
         };
 
         if (!featureProfile) {
@@ -42,7 +38,7 @@ export class FeatureLogDto {
         };
 
 
-        return [undefined, new FeatureLogDto(props.featureStatus, props.featureName, props.featureProfile)];
+        return [undefined, new FeatureLogDto(props.featureConfig, props.browser, props.featureProfile)];
 
 
     };

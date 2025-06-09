@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
-import { UserLogService } from "../services";
 import { AuthService } from "../services/auth/auth.service";
 import { AuthController } from "./controller";
 
@@ -12,8 +11,7 @@ export class AuthRoutes {
 
         const router = Router();
 
-        const userLogService = new UserLogService();
-        const authService = new AuthService(userLogService);
+        const authService = new AuthService();
         const controller = new AuthController(authService);
 
 

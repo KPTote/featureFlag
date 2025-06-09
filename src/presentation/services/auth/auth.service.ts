@@ -3,21 +3,16 @@ import { AuthRepository } from "../../../data/repositories";
 import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
 import { ENUM_TYPE_USER } from "../../../enums/type-user.enum";
-import { UserLogAction } from "../../../enums/user-log-action.enum";
 import { User } from "../../../interfaces/user.interface";
-import { UserLogService } from "../user-log/user-log.service";
-import { actionUserMessage } from "../utils/log-actions";
 
 
 
 
 export class AuthService {
 
-    constructor(
-        private readonly userLogService: UserLogService
-    ) { }
-
     public async registerUser(registerUserDto: User, emailAdmin: string) {
+
+        console.log(emailAdmin);
 
         const emailExist = await AuthRepository.findByEmail(registerUserDto.email);
 
@@ -52,20 +47,6 @@ export class AuthService {
 
             const { email, typeUser, profile, firstName, lastName } = await AuthRepository.create(registerUserDto);
 
-            this.userLogService.createEvent({
-                firstName,
-                lastName,
-                action: UserLogAction.CREATE,
-                actionMessage: actionUserMessage({
-                    action: UserLogAction.CREATE,
-                    firstName,
-                    lastName,
-                    email: email!
-                }),
-                emailExecutedBy: emailAdmin,
-                emailUserAffected: email!
-            });
-
             return {
                 email,
                 typeUser,
@@ -84,6 +65,8 @@ export class AuthService {
     public async login(loginUserDto: LoginUserDto) {
 
         const { email, password } = loginUserDto;
+
+        console.log(password);
 
         const emailExist = await AuthRepository.findByEmail(email);
 

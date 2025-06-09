@@ -1,5 +1,7 @@
 import { User } from "../../interfaces/user.interface";
+import { UserModel } from "../mongo/models/user.model";
 import { prisma } from "../postgres-client";
+
 
 
 export class UserRepository {
@@ -22,31 +24,29 @@ export class UserRepository {
     };
 
     static async changePassword(email: string, newPass: string){
-        return await prisma.fT_USER.update({
-            where: {
-                USER_EMAIL: email 
+        return await UserModel.updateOne(
+            {
+                email
             },
-            data: {
-                USER_PASSWORD: newPass
+            {
+                password: newPass
             }
-        });
+        )
     };
 
     static async deleteUser(email: string){
-        return await prisma.fT_USER.delete({
-            where: {
-                USER_EMAIL: email
+        return await UserModel.deleteOne(
+            {
+                email
             }
-        });
+        );
     };
 
     static async verifyByEmail(email: string) {
 
-        return await prisma.fT_USER.findUnique({
-            where: {
-                USER_EMAIL: email
-            }
-        });
+        return await UserModel.find({
+            email
+        })
     };
 
     static async verifyById(id: number) {

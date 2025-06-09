@@ -29,7 +29,20 @@ export class FeatureLogService {
     public async getAll() {
         try {
 
-            return await FeatureLogRepository.getAll();
+            const logsList = await FeatureLogRepository.getAll();
+
+            return logsList.map( log => {
+
+                return {
+                    configurationUsed: log.featureConfig,
+                    featureProfile: log.featureProfile,
+                    executedBy: log.executedBy,
+                    dateTimeExecution: log.dateTimeExecution,
+                    browser: log.browser
+
+                }
+
+            });
 
         } catch (error) {
             throw CustomError.internalServer(`${error}`);

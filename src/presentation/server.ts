@@ -13,6 +13,9 @@ export class Server {
 
     async start(){
 
+        //CORS
+        const cors = require('cors');
+        this.app.use(cors());
 
 
         //Middlewares

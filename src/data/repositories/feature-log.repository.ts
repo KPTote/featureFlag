@@ -8,17 +8,17 @@ export class FeatureLogRepository {
     static async insert(props: FeatureLogRepositoryProps) {
 
         return await FeatureLogSchema.insertOne({
-            featureStatus: props.featureStatus,
+            featureConfig: props.featureConfig,
             executedBy: props.executedBy,
             featureProfile: props.featureProfile,
-            featureName: props.featureName,
+            browser: props.browser,
             dateTimeExecution: props.dateTime
         });
 
     };
 
     static async getAll() {
-        return await prisma.fT_LOG_FEATURE.findMany();
+        return await FeatureLogSchema.find();
     };
 
     static async getByEmail(email: string) {

@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const featureLogSchema = new mongoose.Schema(
     {
-        featureStatus: {
-            type: String,
-            required: [true, 'Action performed is required']
+        featureConfig: {
+            type: Array,
+            required: [true, 'Feature configuration is required']
         },
-        featureName: {
+        browser: {
             type: String,
-            required: [true, 'Feature name is required']
+            required: [true, 'Browser is required']
         },
         featureProfile: {
             type: String,
