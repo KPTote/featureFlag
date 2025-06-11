@@ -8,7 +8,7 @@ export class UserService {
 
     public async changePassword(email: string, newPass: string) {
 
-        const [userExist] = await UserRepository.verifyByEmail(email);
+        const userExist = await UserRepository.verifyByEmail(email);
 
         if (!userExist) {
             throw CustomError.badRequest(`User don't found`);
@@ -54,13 +54,13 @@ export class UserService {
     };
 
     private async validationsForDelete(emailUser: string, emailAdmin: string) {
-        const [userExist] = await UserRepository.verifyByEmail(emailUser);
+        const userExist = await UserRepository.verifyByEmail(emailUser);
 
         if (!userExist) {
             throw CustomError.badRequest(`User don't found`);
         };
 
-        const [useradmin] = await UserRepository.verifyByEmail(emailAdmin);
+        const useradmin = await UserRepository.verifyByEmail(emailAdmin);
 
         if (!useradmin) {
             throw CustomError.badRequest(`User don't found`);

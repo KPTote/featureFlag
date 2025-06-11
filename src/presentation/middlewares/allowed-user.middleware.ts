@@ -20,8 +20,7 @@ export const isAllowedUser = async (req: Request, res: Response, next: NextFunct
         const restrictions = new UserRestrictionsService();
 
         const isAllowed = restrictions.checkRestrictions({
-            typeUser: user.typeUser!,
-            idUser: user.id,
+            typeUser: user.typeUser,
             url: req.url,
             method: req.method
         });
