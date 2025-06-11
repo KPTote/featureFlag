@@ -1,6 +1,6 @@
+import { dbFS } from "../../app";
 import { FeatureLogRepositoryProps } from "../../interfaces/feature.interface";
 import { UserModel } from "../indext";
-import { FeatureLogSchema } from "../mongo/models/feature-log";
 
 
 export class FeatureLogRepository {
@@ -8,7 +8,7 @@ export class FeatureLogRepository {
 
     static async insert(props: FeatureLogRepositoryProps) {
 
-        return await FeatureLogSchema.insertOne({
+        return await dbFS.collection('featureLog').add({
             featureConfig: props.featureConfig,
             executedBy: props.executedBy,
             featureProfile: props.featureProfile,
@@ -19,14 +19,27 @@ export class FeatureLogRepository {
     };
 
     static async getAll() {
-        return await FeatureLogSchema.find();
+        const logs = await dbFS.collection('featureLog').get();
+
+        return logs.docs.map(doc => doc.data());
     };
 
     static async getByEmail(email: string) {
 
-        return await FeatureLogSchema.find({
-            executedBy: email
+        const snapshot = await dbFS.collection('featureLog').get();
+
+        const getLogs: FeatureLogRepositoryProps[] = snapshot.docs.map(doc => {
+            return {
+                featureConfig: doc.get('featureConfig'),
+                featureProfile: doc.get('featureProfile'),
+                executedBy: doc.get('executedBy'),
+                dateTime: doc.get('dateTimeExecution'),
+                browser: doc.get('browser')
+            }
         });
+
+
+        return getLogs.filter(doc => doc.executedBy === email)
     }
 
     static async getUser(email: string) {

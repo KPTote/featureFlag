@@ -2,7 +2,7 @@ import { EncryptPassUser, envs, JwtAdapter } from "../../../configs";
 import { AuthRepository } from "../../../data/repositories";
 import { LoginUserDto } from "../../../domain/dtos";
 import { CustomError } from "../../../domain/errors/custom.error";
-import { ENUM_TYPE_USER } from "../../../enums/type-user.enum";
+import { ENUM_TYPE_USER } from "../../../enums";
 import { User } from "../../../interfaces/user.interface";
 
 
@@ -11,8 +11,6 @@ import { User } from "../../../interfaces/user.interface";
 export class AuthService {
 
     public async registerUser(registerUserDto: User, emailAdmin: string) {
-
-        console.log(emailAdmin);
 
         const emailExist = await AuthRepository.findByEmail(registerUserDto.email);
 
@@ -45,14 +43,13 @@ export class AuthService {
 
             registerUserDto.password = EncryptPassUser.hash(registerUserDto.password);
 
-            const { email, typeUser, profile, firstName, lastName } = await AuthRepository.create(registerUserDto);
+            const newUser = await AuthRepository.create(registerUserDto);
 
             return {
-                email,
-                typeUser,
-                profile
+                userId: newUser.id,
+                email: registerUserDto.email,
+                typeUser: registerUserDto.typeUser
             }
-
 
 
         } catch (error) {
@@ -66,13 +63,12 @@ export class AuthService {
 
         const { email, password } = loginUserDto;
 
-        console.log(password);
-
         const emailExist = await AuthRepository.findByEmail(email);
 
         if (!emailExist) {
             throw CustomError.badRequest("Email doesn't exist");
         };
+
 
         const isMatching = EncryptPassUser.compare(password, emailExist.password);
 

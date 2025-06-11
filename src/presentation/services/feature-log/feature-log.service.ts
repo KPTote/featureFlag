@@ -1,4 +1,4 @@
-import { FeatureLogRepository } from "../../../data/repositories";
+import { FeatureLogRepository, UserRepository } from "../../../data/repositories";
 import { FeatureLogDto } from "../../../domain/dtos/feature-log/feature-log.dto";
 import { CustomError } from "../../../domain/errors/custom.error";
 
@@ -13,21 +13,22 @@ export class FeatureLogService {
 
         try {
 
-            const [{profile}] = await FeatureLogRepository.getUser(email);
+            const user = await UserRepository.verifyByEmail(email);
+            console.log(user?.profile);
 
-            if(!profile){
+            if(!user){
                 throw CustomError.badRequest('Invalid User');
             }
 
-            if(!this.verifyProfile(profile, propsRepository.featureProfile)){
+            if(!this.verifyProfile(user?.profile ?? '', propsRepository.featureProfile)){
                 throw CustomError.badRequest('User profile and feature profile must be the same');
             }
 
-            const {executedBy, dateTimeExecution } = await FeatureLogRepository.insert(propsRepository);
+            await FeatureLogRepository.insert(propsRepository);
 
             return {
                 executedBy,
-                dateTimeExecution
+                dateTimeExecution: dateTime
             }
 
         } catch (error) {
@@ -65,12 +66,17 @@ export class FeatureLogService {
         try {
 
             const logArr = await FeatureLogRepository.getByEmail(email);
+
+            if(logArr.length <= 0){
+                throw CustomError.noContent('You dont have logs')
+            }
+
             return logArr.map(log => {
                 return {
                     featureConfig: log.featureConfig,
                     browser: log.browser,
                     featureProfile: log.featureProfile,
-                    dateTimeExecution: log.dateTimeExecution
+                    dateTimeExecution: log.dateTime
                 }
             });
 

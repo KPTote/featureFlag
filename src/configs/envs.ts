@@ -8,6 +8,7 @@ export const envs = {
     JWT_TIME: get('JWT_TIME').required().asString(),
     USER_INIT: get('USER_INIT').required().asString(),
     USER_INIT_PASS: get('USER_INIT_PASS').required().asString(),
+    GOOGLE_CONFIG: get('GOOGLE_APPLICATION_CREDENTIALS').required(),
 
     //Mongo DB
 

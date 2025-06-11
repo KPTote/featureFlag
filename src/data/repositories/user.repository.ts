@@ -1,3 +1,5 @@
+import { dbFS } from "../../app";
+import { User } from "../../interfaces/user.interface";
 import { UserModel } from "../mongo/models/user.model";
 import { prisma } from "../postgres-client";
 
@@ -26,9 +28,21 @@ export class UserRepository {
 
     static async verifyByEmail(email: string) {
 
-        return await UserModel.find({
-            email
-        })
+          const snapshot = await dbFS.collection('users').get();
+  
+          const getUsers: User[] = snapshot.docs.map( doc => {
+              return {
+                      firstName: doc.get('firstName'),
+                      lastName: doc.get('lastName'),
+                      password: doc.get('password'),
+                      email: doc.get('email'),
+                      typeUser: doc.get('typeUser'),
+                      managedBy: doc.get('managedBy'),
+                      profile: doc.get('profile'),
+              }
+          });
+  
+          return  getUsers.find( doc => doc.email === email )
     };
 
     static async verifyById(id: number) {

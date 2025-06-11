@@ -25,6 +25,10 @@ export class CustomError extends Error {
         return new CustomError(500, message);
     };
 
+     static noContent(message: string) {
+    return new CustomError(204, message); 
+  } 
+
     
 
 };
