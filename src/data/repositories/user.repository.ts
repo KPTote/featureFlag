@@ -1,7 +1,6 @@
 import { dbFS } from "../../app";
 import { User } from "../../interfaces/user.interface";
 import { UserModel } from "../mongo/models/user.model";
-import { prisma } from "../postgres-client";
 
 
 
@@ -45,12 +44,6 @@ export class UserRepository {
           return  getUsers.find( doc => doc.email === email )
     };
 
-    static async verifyById(id: number) {
-        return await prisma.fT_USER.findUnique({
-            where: {
-                USER_ID: id
-            }
-        });
-    };
+
 
 };

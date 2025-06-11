@@ -14,7 +14,11 @@ export const envs = {
 
     MONGO_URL: get('MONGO_URL').required().asString(),
     MONGO_DB_NAME: get('MONGO_DB_NAME').required().asString(),
-    MONGO_USER: get('MONGO_USER').required().asString(),    
-    MONGO_PASS: get('MONGO_PASS').required().asString()
+    MONGO_USER: get('MONGO_USER').required().asString(),
+    MONGO_PASS: get('MONGO_PASS').required().asString(),
+
+    FIREBASE_PROJECT_ID: get('FIREBASE_PROJECT_ID').required().asString(),
+    FIREBASE_CLIENT_EMAIL: get('FIREBASE_CLIENT_EMAIL').required().asString(),
+    FIREBASE_PRIVATE_KEY: get('FIREBASE_PRIVATE_KEY').required().asString()
 
 };

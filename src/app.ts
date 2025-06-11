@@ -1,5 +1,6 @@
 import 'dotenv/config';
-import { applicationDefault, initializeApp } from 'firebase-admin/app';
+import { credential } from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { envs } from "./configs/envs";
 import { AppRoutes } from "./presentation/routes";
@@ -25,7 +26,11 @@ async function main() {
 }
 
 const firebaseApp = initializeApp({
-    credential: applicationDefault()
+    credential: credential.cert({
+        projectId: envs.FIREBASE_PROJECT_ID,
+        clientEmail: envs.FIREBASE_CLIENT_EMAIL,
+        privateKey: envs.FIREBASE_PRIVATE_KEY
+    })
 });
 
 export const dbFS = getFirestore(firebaseApp);
