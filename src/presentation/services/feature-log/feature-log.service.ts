@@ -16,11 +16,11 @@ export class FeatureLogService {
             const user = await UserRepository.verifyByEmail(email);
             console.log(user?.profile);
 
-            if(!user){
+            if (!user) {
                 throw CustomError.badRequest('Invalid User');
             }
 
-            if(!this.verifyProfile(user?.profile ?? '', propsRepository.featureProfile)){
+            if (!this.verifyProfile(user?.profile ?? '', propsRepository.featureProfile)) {
                 throw CustomError.badRequest('User profile and feature profile must be the same');
             }
 
@@ -43,7 +43,7 @@ export class FeatureLogService {
 
             const logsList = await FeatureLogRepository.getAll();
 
-            return logsList.map( log => {
+            return logsList.map(log => {
 
                 return {
                     configurationUsed: log.featureConfig,
@@ -67,7 +67,7 @@ export class FeatureLogService {
 
             const logArr = await FeatureLogRepository.getByEmail(email);
 
-            if(logArr.length <= 0){
+            if (logArr.length <= 0) {
                 throw CustomError.noContent('You dont have logs')
             }
 
@@ -87,16 +87,10 @@ export class FeatureLogService {
 
     private getDateTime(): string {
         const date = new Date();
-        let timePeriod = 'AM';
-
-        if (date.getHours() >= 12) {
-            timePeriod = 'PM';
-        };
-
-        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} ${timePeriod}`;
+        return date.toLocaleString();
     };
 
-    private verifyProfile(featureProfile: string, userProfile: string):boolean{
+    private verifyProfile(featureProfile: string, userProfile: string): boolean {
         return featureProfile === userProfile;
     }
 
