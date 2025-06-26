@@ -11,10 +11,10 @@ export class FeatureLogService {
         const propsRepository = { ...featureLogDto, executedBy, dateTime };
         const email = executedBy;
 
+
         try {
 
             const user = await UserRepository.verifyByEmail(email);
-            console.log(user?.profile);
 
             if (!user) {
                 throw CustomError.badRequest('Invalid User');
@@ -87,7 +87,7 @@ export class FeatureLogService {
 
     private getDateTime(): string {
         const date = new Date();
-        return date.toLocaleString();
+        return date.toISOString();
     };
 
     private verifyProfile(featureProfile: string, userProfile: string): boolean {

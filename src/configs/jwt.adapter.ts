@@ -12,8 +12,6 @@ export class JwtAdapter {
             jwt.sign(payload, JWT_SEED, { expiresIn: duration }, (err, token) => {
 
                 if (err) return resolve(null);
-                console.log(token);
-
                 resolve(token);
 
             });

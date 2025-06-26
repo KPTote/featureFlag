@@ -20,13 +20,7 @@ export class Server {
 
         //Middlewares
         this.app.use(express.json());
-        // this.app.use(isAllowedUser);
         this.app.use(transforToUpper)
-        // this.app.use((req: Request, res: Response, next: NextFunction) => {
-
-        //     console.log(req.headers);
-
-        // });
 
         //Routes
         this.app.use(this.routes)

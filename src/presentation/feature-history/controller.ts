@@ -36,8 +36,6 @@ export class FeatureHistoryController {
 
         const [error, insertIntoLogDto ] = FeatureLogDto.insertIntoLog(req.body)
 
-        console.log(error);
-
         if(error){
             res.status(400).json({error});
             return;

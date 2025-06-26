@@ -6,7 +6,6 @@ import { UserRestrictionsService } from "../services";
 export const isAllowedUser = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email = '' } = req.headers;
-    console.log(email);
 
     try {     
 
